@@ -1,3 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@theme {
+  --color-mySky: #c3ebfa;
+  --color-skyLight: #edf9fd;
+  --color-myPurple: #cfceff;
+  --color-purpleLight: #f1f0ff;
+  --color-myYellow: #fae27c;
+  --color-yellowLight: #fefce8;
+}
