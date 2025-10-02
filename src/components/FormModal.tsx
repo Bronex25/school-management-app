@@ -50,10 +50,10 @@ const FormModal = ({
   const size = type === 'create' ? 'w-8 h-8' : 'w-7 h-7'
   const bgColor =
     type === 'create'
-      ? 'bg-lamaYellow'
+      ? 'bg-myYellow'
       : type === 'update'
-        ? 'bg-lamaSky'
-        : 'bg-lamaPurple'
+        ? 'bg-mySky'
+        : 'bg-myPurple'
 
   const [open, setOpen] = useState(false)
 
@@ -77,7 +77,7 @@ const FormModal = ({
   return (
     <>
       <button
-        className={`${size} flex items-center justify-center rounded-full ${bgColor}`}
+        className={`${size} flex items-center justify-center rounded-full ${bgColor} cursor-pointer`}
         onClick={() => setOpen(true)}
       >
         <Image src={`/${type}.png`} alt="" width={16} height={16} />

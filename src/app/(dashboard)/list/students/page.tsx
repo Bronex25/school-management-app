@@ -1,3 +1,4 @@
+import FormModal from '@/components/FormModal'
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
@@ -85,14 +86,7 @@ const StudentListPage = () => {
             </button>
           </Link>
           {role === 'admin' && (
-            <button className="w-7 h-7 flex items-center justify-center rounded-full bg-myPurple">
-              <Image
-                src="/delete.png"
-                alt="delete button"
-                height={16}
-                width={16}
-              ></Image>
-            </button>
+            <FormModal table="student" type="delete" id={item.id} />
           )}
         </div>
       </td>
@@ -106,7 +100,7 @@ const StudentListPage = () => {
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
           <div className="flex items-center gap-4 self-end">
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-myYellow">
+            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-myYellow cursor-pointer">
               <Image
                 src="/filter.png"
                 alt="fliter button"
@@ -114,7 +108,7 @@ const StudentListPage = () => {
                 height={14}
               ></Image>
             </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-myYellow">
+            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-myYellow cursor-pointer">
               <Image
                 src="/sort.png"
                 alt="sort button"
@@ -122,16 +116,7 @@ const StudentListPage = () => {
                 height={14}
               ></Image>
             </button>
-            {role === 'admin' && (
-              <button className="w-8 h-8 flex items-center justify-center rounded-full bg-myYellow">
-                <Image
-                  src="/plus.png"
-                  alt="plus button"
-                  width={14}
-                  height={14}
-                ></Image>
-              </button>
-            )}
+            {role === 'admin' && <FormModal table="student" type="create" />}
           </div>
         </div>
       </div>
