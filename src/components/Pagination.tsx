@@ -1,22 +1,54 @@
+'use client'
+import { ITEM_PER_PAGE } from '@/lib/variables'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
-const Pagination = () => {
+type Props = {
+  currentPage: number
+  totalItems: number
+}
+const Pagination: React.FC<Props> = ({ currentPage, totalItems }) => {
+  const router = useRouter()
+
+  const hasPrev = ITEM_PER_PAGE * (currentPage - 1) > 0
+  const hasNext = ITEM_PER_PAGE * (currentPage - 1) * ITEM_PER_PAGE < totalItems
+
+  const changePage = (newPage: number) => {
+    const params = new URLSearchParams(window.location.search)
+    params.set('page', newPage.toString())
+    router.push(`${window.location.pathname}?${params}`)
+  }
   return (
     <div className="p-4 flex items-center justify-between text-gray-500">
       <button
-        disabled
-        className="py-2 px-4 rounded-md bg-slate-200 text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={!hasPrev}
+        className="py-2 px-4 rounded-md bg-slate-200 text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        onClick={() => changePage(currentPage - 1)}
       >
         Prev
       </button>
       <div className="flex items-center gap-2 text-sm">
-        <button className="px-2 rounded-sm bg-mySky">1</button>
-        <button className="px-2 rounded-sm">2</button>
-        <button className="px-2 rounded-sm">3</button>
-        ...
-        <button className="px-2 rounded-sm">8</button>
+        {Array.from(
+          { length: Math.ceil(totalItems / ITEM_PER_PAGE) },
+          (_, index) => {
+            const pageIndex = index + 1
+            return (
+              <button
+                key={pageIndex}
+                className={`px-2 rounded-sm cursor-pointer ${currentPage === pageIndex ? 'bg-mySky' : ''}`}
+                onClick={() => changePage(pageIndex)}
+              >
+                {pageIndex}
+              </button>
+            )
+          },
+        )}
       </div>
-      <button className="py-2 px-4 rounded-md bg-slate-200 text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
+      <button
+        disabled={!hasNext}
+        onClick={() => changePage(currentPage + 1)}
+        className="py-2 px-4 rounded-md bg-slate-200 text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+      >
         Next
       </button>
     </div>
