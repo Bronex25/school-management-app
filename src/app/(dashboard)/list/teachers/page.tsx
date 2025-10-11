@@ -100,7 +100,7 @@ const TeachersListPage = async ({
 }: {
   searchParams: { [key: string]: string }
 }) => {
-  const { page, ...queryParams } = searchParams
+  const { page, ...queryParams } = await searchParams
 
   const currentPage = page ? parseInt(page) : 1
 
@@ -118,6 +118,9 @@ const TeachersListPage = async ({
           break
         case 'search':
           query.name = { contains: value, mode: 'insensitive' }
+          break
+        default:
+          break
       }
     }
   }

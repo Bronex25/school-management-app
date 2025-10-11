@@ -10,8 +10,8 @@ type Props = {
 const Pagination: React.FC<Props> = ({ currentPage, totalItems }) => {
   const router = useRouter()
 
-  const hasPrev = ITEM_PER_PAGE * (currentPage - 1) > 0
-  const hasNext = ITEM_PER_PAGE * (currentPage - 1) * ITEM_PER_PAGE < totalItems
+  const hasPrev = currentPage > 1
+  const hasNext = ITEM_PER_PAGE * currentPage < totalItems
 
   const changePage = (newPage: number) => {
     const params = new URLSearchParams(window.location.search)

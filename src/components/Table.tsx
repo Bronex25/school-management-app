@@ -12,6 +12,13 @@ type Props = {
 }
 
 const Table: React.FC<Props> = ({ columns, renderRow, data }) => {
+  if (data.length === 0) {
+    return (
+      <div className="w-full flex items-center justify-center min-h-[50dvh]">
+        <h1>There is nothing found</h1>
+      </div>
+    )
+  }
   return (
     <table className="w-full mt-4">
       <thead>
