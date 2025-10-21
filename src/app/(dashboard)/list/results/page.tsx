@@ -3,8 +3,8 @@ import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import { Prisma } from '@/generated/prisma'
-import { role } from '@/lib/data'
 import prisma from '@/lib/prisma'
+import { currentUserId, role } from '@/lib/util'
 import { ITEM_PER_PAGE } from '@/lib/variables'
 import Image from 'next/image'
 import React from 'react'
@@ -50,10 +50,14 @@ const columns = [
     accessor: 'date',
     className: 'hidden md:table-cell',
   },
-  {
-    header: 'Actions',
-    accessor: 'action',
-  },
+  ...(role === 'admin' || role === 'teacher'
+    ? [
+        {
+          header: 'Actions',
+          accessor: 'action',
+        },
+      ]
+    : []),
 ]
 const renderRow = (item: ResultList) => (
   <tr
@@ -72,12 +76,13 @@ const renderRow = (item: ResultList) => (
     </td>
     <td>
       <div className="flex items-center gap-2">
-        {role === 'admin' && (
-          <>
-            <FormModal table="result" type="update" data={item} />
-            <FormModal table="result" type="delete" id={item.id} />
-          </>
-        )}
+        {role === 'admin' ||
+          (role === 'teacher' && (
+            <>
+              <FormModal table="result" type="update" data={item} />
+              <FormModal table="result" type="delete" id={item.id} />
+            </>
+          ))}
       </div>
     </td>
   </tr>
@@ -110,6 +115,21 @@ const ResultListPage = async ({
           break
       }
     }
+  }
+
+  switch (role) {
+    case 'admin':
+      break
+    case 'teacher':
+      query.OR = [
+        { exam: { lesson: { teacherId: currentUserId! } } },
+        { assignment: { lesson: { teacherId: currentUserId! } } },
+      ]
+      break
+    case 'student':
+      query.studentId = currentUserId!
+    case 'parent':
+      query.student = { parentId: currentUserId! }
   }
 
   const [dataRes, count] = await prisma.$transaction([
@@ -192,7 +212,10 @@ const ResultListPage = async ({
                 height={14}
               ></Image>
             </button>
-            {role === 'admin' && <FormModal table="result" type="create" />}
+            {role === 'admin' ||
+              (role === 'teacher' && (
+                <FormModal table="result" type="create" />
+              ))}
           </div>
         </div>
       </div>

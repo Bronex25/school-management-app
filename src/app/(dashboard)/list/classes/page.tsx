@@ -3,8 +3,8 @@ import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import { Class, Prisma, Teacher } from '@/generated/prisma'
-import { role } from '@/lib/data'
 import prisma from '@/lib/prisma'
+import { role } from '@/lib/util'
 import { ITEM_PER_PAGE } from '@/lib/variables'
 import Image from 'next/image'
 
@@ -33,10 +33,14 @@ const columns = [
     className: 'hidden md:table-cell',
   },
 
-  {
-    header: 'Actions',
-    accessor: 'action',
-  },
+  ...(role === 'admin'
+    ? [
+        {
+          header: 'Actions',
+          accessor: 'action',
+        },
+      ]
+    : []),
 ]
 const renderRow = (item: ClassList) => (
   <tr

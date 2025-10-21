@@ -3,8 +3,8 @@ import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import { Parent, Prisma, Student } from '@/generated/prisma'
-import { role } from '@/lib/data'
 import prisma from '@/lib/prisma'
+import { role } from '@/lib/util'
 import { ITEM_PER_PAGE } from '@/lib/variables'
 import Image from 'next/image'
 import React from 'react'
@@ -31,10 +31,14 @@ const columns = [
     accessor: 'address',
     className: 'hidden lg:table-cell',
   },
-  {
-    header: 'Actions',
-    accessor: 'action',
-  },
+  ...(role === 'admin'
+    ? [
+        {
+          header: 'Actions',
+          accessor: 'action',
+        },
+      ]
+    : []),
 ]
 
 const renderRow = (item: ParentList) => (
