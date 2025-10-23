@@ -1,3 +1,4 @@
+import { UserButton } from '@clerk/nextjs'
 import { currentUser } from '@clerk/nextjs/server'
 import Image from 'next/image'
 import React from 'react'
@@ -36,13 +37,7 @@ const Navbar = async () => {
           <span className="text-xs leading-3 font-medium">John Doe</span>
           <span className="text-[10px] text-gray-500 text-right">{role}</span>
         </div>
-        <Image
-          src="/avatar.png"
-          alt="avatar"
-          width={36}
-          height={36}
-          className="rounded-full"
-        />
+        <UserButton></UserButton>
       </div>
     </div>
   )
