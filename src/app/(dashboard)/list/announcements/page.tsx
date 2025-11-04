@@ -4,7 +4,7 @@ import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import { Announcement, Class, Prisma } from '@/generated/prisma'
 import prisma from '@/lib/prisma'
-import { currentUserId, role } from '@/lib/util'
+import { currentUserId, role } from '@/lib/utils'
 import { ITEM_PER_PAGE } from '@/lib/variables'
 import Image from 'next/image'
 import React from 'react'
@@ -27,11 +27,11 @@ const columns = [
   },
   ...(role === 'admin'
     ? [
-        {
-          header: 'Actions',
-          accessor: 'action',
-        },
-      ]
+      {
+        header: 'Actions',
+        accessor: 'action',
+      },
+    ]
     : []),
 ]
 const renderRow = (item: AnnouncementList) => (

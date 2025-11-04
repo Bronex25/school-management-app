@@ -1,10 +1,11 @@
-import FormModal from '@/components/FormModal'
+import FormContainer from '@/components/FormContainer'
+// import FormModal from '@/components/FormModal'
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import { Class, Prisma, Subject, Teacher } from '@/generated/prisma'
 import prisma from '@/lib/prisma'
-import { role } from '@/lib/util'
+import { role } from '@/lib/utils'
 import { ITEM_PER_PAGE } from '@/lib/variables'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -44,11 +45,11 @@ const columns = [
   },
   ...(role === 'admin'
     ? [
-        {
-          header: 'Actions',
-          accessor: 'action',
-        },
-      ]
+      {
+        header: 'Actions',
+        accessor: 'action',
+      },
+    ]
     : []),
 ]
 
@@ -92,7 +93,7 @@ const renderRow = (item: TeacherList) => (
           </button>
         </Link>
         {role === 'admin' && (
-          <FormModal table="teacher" type="delete" id={+item.id} />
+          <FormContainer table="teacher" type="delete" id={item.id} />
         )}
       </div>
     </td>
@@ -168,7 +169,9 @@ const TeachersListPage = async ({
                 height={14}
               ></Image>
             </button>
-            {role === 'admin' && <FormModal table="teacher" type="create" />}
+            {role === 'admin' && (
+              <FormContainer table="teacher" type="create" />
+            )}
           </div>
         </div>
       </div>
