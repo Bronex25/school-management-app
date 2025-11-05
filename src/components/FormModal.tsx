@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { deleteClass, deleteSubject, deleteTeacher } from '@/lib/actions'
+import {
+  deleteClass,
+  deleteStudent,
+  deleteSubject,
+  deleteTeacher,
+} from '@/lib/actions'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import {
@@ -19,6 +24,7 @@ const deleteActionMap = {
   subject: deleteSubject,
   class: deleteClass,
   teacher: deleteTeacher,
+  student: deleteStudent,
   parentSubject: deleteSubject,
   lesson: deleteSubject,
   exam: deleteSubject,
@@ -41,6 +47,9 @@ const SubjectForm = dynamic(() => import('./forms/SubjectForm'), {
 const ClassForm = dynamic(() => import('./forms/ClassForm'), {
   loading: () => <h1>Loading...</h1>,
 })
+const ExamForm = dynamic(() => import('./forms/ExamForm'), {
+  loading: () => <h1>Loading...</h1>,
+})
 
 const forms: {
   [key: string]: (
@@ -58,14 +67,14 @@ const forms: {
       relativeData={relativeData}
     />
   ),
-  // student: (setOpen, type, data, relativeData) => (
-  //   <StudentForm
-  //     type={type}
-  //     data={data}
-  //     setOpen={setOpen}
-  //     relativeData={relativeData}
-  //   />
-  // ),
+  student: (setOpen, type, data, relativeData) => (
+    <StudentForm
+      type={type}
+      data={data}
+      setOpen={setOpen}
+      relativeData={relativeData}
+    />
+  ),
   subject: (setOpen, type, data, relativeData) => (
     <SubjectForm
       type={type}
@@ -76,6 +85,14 @@ const forms: {
   ),
   class: (setOpen, type, data, relativeData) => (
     <ClassForm
+      type={type}
+      data={data}
+      setOpen={setOpen}
+      relativeData={relativeData}
+    />
+  ),
+  exam: (setOpen, type, data, relativeData) => (
+    <ExamForm
       type={type}
       data={data}
       setOpen={setOpen}

@@ -1,3 +1,4 @@
+import FormContainer from '@/components/FormContainer'
 import FormModal from '@/components/FormModal'
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
@@ -38,11 +39,11 @@ const columns = [
   },
   ...(role === 'admin' || role === 'teacher'
     ? [
-      {
-        header: 'Actions',
-        accessor: 'action',
-      },
-    ]
+        {
+          header: 'Actions',
+          accessor: 'action',
+        },
+      ]
     : []),
 ]
 const renderRow = (item: ExamList) => (
@@ -63,8 +64,8 @@ const renderRow = (item: ExamList) => (
         {role === 'admin' ||
           (role === 'teacher' && (
             <>
-              <FormModal table="exam" type="update" data={item} />
-              <FormModal table="exam" type="delete" id={item.id} />
+              <FormContainer table="exam" type="update" data={item} />
+              <FormContainer table="exam" type="delete" id={item.id} />
             </>
           ))}
       </div>
@@ -174,7 +175,9 @@ const ExamListPage = async ({
               ></Image>
             </button>
             {role === 'admin' ||
-              (role === 'teacher' && <FormModal table="exam" type="delete" />)}
+              (role === 'teacher' && (
+                <FormContainer table="exam" type="delete" />
+              ))}
           </div>
         </div>
       </div>
