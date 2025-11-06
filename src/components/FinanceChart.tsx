@@ -81,7 +81,6 @@ const FinanceChart = () => {
     <div className="bg-white rounded-lg p-4 h-full">
       <div className="flex justify-between items-center">
         <h1 className="text-lg font-semibold">Finance</h1>
-        <Image src="/moreDark.png" alt="more button" height={20} width={20} />
       </div>
       <ResponsiveContainer width="100%" height="90%">
         <LineChart

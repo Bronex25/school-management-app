@@ -38,11 +38,11 @@ const columns = [
   },
   ...(role === 'admin'
     ? [
-      {
-        header: 'Actions',
-        accessor: 'action',
-      },
-    ]
+        {
+          header: 'Actions',
+          accessor: 'action',
+        },
+      ]
     : []),
 ]
 

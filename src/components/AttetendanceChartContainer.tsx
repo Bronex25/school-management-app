@@ -2,6 +2,7 @@ import React from 'react'
 import AttendanceChart from './AttendanceChart'
 import prisma from '@/lib/prisma'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const AttetendanceChartContainer = async () => {
   const today = new Date()
@@ -34,8 +35,6 @@ const AttetendanceChartContainer = async () => {
     }
 
   resData.forEach((item) => {
-    const itemDate = new Date(item.date)
-
     if (dayOfWeek >= 1 && dayOfWeek <= 5) {
       const dayDame = daysOfWeek[dayOfWeek - 1]
 
@@ -57,7 +56,9 @@ const AttetendanceChartContainer = async () => {
     <div className="bg-white rounded-lg p-4 h-full">
       <div className="flex justify-between items-center">
         <h1 className="text-lg font-semibold">Attendance</h1>
-        <Image src="/moreDark.png" alt="more button" height={20} width={20} />
+        <Link href={'/list/attendance'}>
+          <Image src="/moreDark.png" alt="more button" height={20} width={20} />
+        </Link>
       </div>
       <AttendanceChart data={data} />
     </div>

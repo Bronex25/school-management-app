@@ -2,6 +2,7 @@ import Image from 'next/image'
 import React from 'react'
 import CountChart from './CountChart'
 import prisma from '@/lib/prisma'
+import Link from 'next/link'
 
 const CountChartContainer = async () => {
   const data = await prisma.student.groupBy({
@@ -18,7 +19,9 @@ const CountChartContainer = async () => {
       {/* TITLE */}
       <div className="flex justify-between items-center">
         <h1 className="text-lg font-semibold">Students</h1>
-        <Image src="/moreDark.png" alt="more pic" width={20} height={20} />
+        <Link href={'/list/students'}>
+          <Image src="/moreDark.png" alt="more pic" width={20} height={20} />
+        </Link>
       </div>
       {/* CHART */}
       <CountChart boys={boys} girls={girls} />
