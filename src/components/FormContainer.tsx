@@ -2,7 +2,6 @@
 import React from 'react'
 import FormModal from './FormModal'
 import prisma from '@/lib/prisma'
-import { role } from '@/lib/utils'
 import { auth } from '@clerk/nextjs/server'
 
 export type FormConatinerProps = {
@@ -25,6 +24,9 @@ export type FormConatinerProps = {
 }
 
 const FormContainer = async ({ table, type, data, id }: FormConatinerProps) => {
+  const { sessionClaims } = await auth()
+  const role = (sessionClaims?.metadata as { role?: string }).role
+
   let relatedData = {}
 
   if (type !== 'delete') {

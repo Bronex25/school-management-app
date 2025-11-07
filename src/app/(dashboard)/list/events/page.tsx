@@ -4,12 +4,16 @@ import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import { Class, Event, Prisma } from '@/generated/prisma'
 import prisma from '@/lib/prisma'
-import { currentUserId, role } from '@/lib/utils'
 import { ITEM_PER_PAGE } from '@/lib/variables'
+import { auth } from '@clerk/nextjs/server'
 import Image from 'next/image'
 import React from 'react'
 
 type EventList = Event & { class: Class }
+
+const { userId, sessionClaims } = await auth()
+const role = (sessionClaims?.metadata as { role?: string }).role
+const currentUserId = userId
 
 const columns = [
   {
@@ -37,11 +41,11 @@ const columns = [
   },
   ...(role === 'admin'
     ? [
-      {
-        header: 'Actions',
-        accessor: 'action',
-      },
-    ]
+        {
+          header: 'Actions',
+          accessor: 'action',
+        },
+      ]
     : []),
 ]
 const renderRow = (item: EventList) => (

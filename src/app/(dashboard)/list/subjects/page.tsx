@@ -4,12 +4,15 @@ import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import { Prisma, Subject, Teacher } from '@/generated/prisma'
 import prisma from '@/lib/prisma'
-import { role } from '@/lib/utils'
 import { ITEM_PER_PAGE } from '@/lib/variables'
+import { auth } from '@clerk/nextjs/server'
 import Image from 'next/image'
 import React from 'react'
 
 type SubjectList = Subject & { teachers: Teacher[] }
+
+const { sessionClaims } = await auth()
+const role = (sessionClaims?.metadata as { role?: string }).role
 
 const columns = [
   {

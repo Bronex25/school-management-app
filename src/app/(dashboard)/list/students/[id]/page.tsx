@@ -4,8 +4,8 @@ import FormContainer from '@/components/FormContainer'
 import Performance from '@/components/Performance'
 import StudentAttendanceCard from '@/components/StudentAttendanceCard'
 import { Class, Student } from '@/generated/prisma'
-import { role } from '@/lib/data'
 import prisma from '@/lib/prisma'
+import { auth } from '@clerk/nextjs/server'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -16,6 +16,9 @@ const SingleStudentPage = async ({
 }: {
   params: { id: string }
 }) => {
+  const { sessionClaims } = await auth()
+  const role = (sessionClaims?.metadata as { role?: string }).role
+
   const student:
     | (Student & {
         class: Class & { _count: { lessons: number } }

@@ -26,7 +26,7 @@ const BigCalendarContainer = async ({
 
   const schedule = adjustScheduleToCurrentWeek(data)
 
-  return <BigCalendar data={data} />
+  return <BigCalendar data={schedule} />
 }
 
 export default BigCalendarContainer

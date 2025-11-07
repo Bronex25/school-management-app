@@ -1,12 +1,11 @@
 import FormContainer from '@/components/FormContainer'
-import FormModal from '@/components/FormModal'
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import { Class, Exam, Prisma, Subject, Teacher } from '@/generated/prisma'
 import prisma from '@/lib/prisma'
-import { currentUserId, role } from '@/lib/utils'
 import { ITEM_PER_PAGE } from '@/lib/variables'
+import { auth } from '@clerk/nextjs/server'
 import Image from 'next/image'
 import React from 'react'
 
@@ -17,6 +16,10 @@ type ExamList = Exam & {
     teacher: Teacher
   }
 }
+
+const { userId, sessionClaims } = await auth()
+const role = (sessionClaims?.metadata as { role?: string }).role
+const currentUserId = userId
 
 const columns = [
   {
