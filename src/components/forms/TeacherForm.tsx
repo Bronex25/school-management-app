@@ -8,6 +8,7 @@ import Image from 'next/image'
 import {
   Dispatch,
   SetStateAction,
+  startTransition,
   useActionState,
   useEffect,
   useState,
@@ -43,7 +44,7 @@ const TeacherForm = ({
     type === 'create' ? createTeacher : updateTeacher,
     {
       success: false,
-      error: false,
+      error: [] as { message: string }[],
     },
   )
 
@@ -212,9 +213,12 @@ const TeacherForm = ({
           }}
         </CldUploadWidget>
       </div>
-      {state.error && (
-        <span className="text-red-500">Something went wrong!</span>
-      )}
+      {state.error?.length > 0 &&
+        state.error.map((err: { message: string }, i: number) => (
+          <p key={i} className="text-red-500 text-sm">
+            {err.message}
+          </p>
+        ))}
       <button className="bg-blue-400 text-white p-2 rounded-md">
         {type === 'create' ? 'Create' : 'Update'}
       </button>

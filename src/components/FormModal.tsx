@@ -118,41 +118,45 @@ const FormModal = ({
 
   const [open, setOpen] = useState(false)
 
+  const deleteAction =
+    table in deleteActionMap
+      ? deleteActionMap[table as keyof typeof deleteActionMap]
+      : undefined
+  const [state, formAction] = useActionState(
+    deleteAction ?? (async () => ({ success: false, error: true })),
+    {
+      success: false,
+      error: false,
+    },
+  )
+
+  useEffect(() => {
+    if (state.success) {
+      toast(`${table} has been deleted!`)
+      setOpen(false)
+    }
+  }, [state, table])
+
   const Form = () => {
-    const deleteAction =
-      table in deleteActionMap
-        ? deleteActionMap[table as keyof typeof deleteActionMap]
-        : undefined
-    const [state, formAction] = useActionState(
-      deleteAction ?? (async () => ({ success: false, error: true })),
-      {
-        success: false,
-        error: false,
-      },
-    )
+    if (type === 'delete' && id) {
+      return (
+        <form action={formAction} className="p-4 flex flex-col gap-4">
+          <input type="hidden" name="id" value={id} />
+          <span className="text-center font-medium">
+            All data will be lost. Are you sure you want to delete this {table}?
+          </span>
+          <button className="bg-red-700 text-white py-2 px-4 rounded-md border-none w-max self-center cursor-pointer">
+            Delete
+          </button>
+        </form>
+      )
+    }
 
-    useEffect(() => {
-      if (state.success) {
-        toast(`${table} has been deleted!`)
-        setOpen(false)
-      }
-    }, [state])
+    if (type === 'create' || type === 'update') {
+      return forms[table](setOpen, type, data, relativeData)
+    }
 
-    return type === 'delete' && id ? (
-      <form action={formAction} className="p-4 flex flex-col gap-4">
-        <input type="text | number" name="id" value={id} hidden />
-        <span className="text-center font-medium">
-          All data will be lost. Are you sure you want to delete this {table}?
-        </span>
-        <button className="bg-red-700 text-white py-2 px-4 rounded-md border-none w-max self-center cursor-pointer">
-          Delete
-        </button>
-      </form>
-    ) : type === 'create' || type === 'update' ? (
-      forms[table](setOpen, type, data, relativeData)
-    ) : (
-      'Form not found!'
-    )
+    return <p>Form not found!</p>
   }
 
   return (

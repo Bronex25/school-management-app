@@ -364,7 +364,14 @@ export const createTeacher = async (
     return { success: true, error: false }
   } catch (error: any) {
     console.log('Clerk error:', JSON.stringify(error.errors, null, 2))
-    return { success: false, error: true }
+    return {
+      success: false,
+      error: (error.errors || [{ message: 'Unknown error' }]).map(
+        (err: any) => ({
+          message: err.message || 'An unexpected error occurred.',
+        }),
+      ),
+    }
   }
 }
 

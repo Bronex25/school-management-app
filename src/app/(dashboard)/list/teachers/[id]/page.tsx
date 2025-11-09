@@ -48,7 +48,7 @@ const SingleTeacherPage = async ({
           <div className="bg-mySky py-6 px-4 rounded-md flex-1 flex gap-4">
             <div className="w-1/3">
               <Image
-                src={teacher.img || './NoAvatar.png'}
+                src={teacher.img || '/noAvatar.png'}
                 alt=""
                 width={144}
                 height={144}
@@ -165,31 +165,31 @@ const SingleTeacherPage = async ({
           <div className="mt-4 flex gap-4 flex-wrap text-xs text-gray-500">
             <Link
               className="p-3 rounded-md bg-skyLight"
-              href={`/list/classes?supervisorId=${'teacher2'}`}
+              href={`/list/classes?supervisorId=${teacher.id}`}
             >
               Teacher&apos;s Classes
             </Link>
             <Link
               className="p-3 rounded-md bg-purpleLight"
-              href={`/list/students?teacherId=${'teacher2'}`}
+              href={`/list/students?teacherId=${teacher.id}`}
             >
               Teacher&apos;s Students
             </Link>
             <Link
               className="p-3 rounded-md bg-yellowLight"
-              href={`/list/lessons?teacherId=${'teacher2'}`}
+              href={`/list/lessons?teacherId=${teacher.id}`}
             >
               Teacher&apos;s Lessons
             </Link>
             <Link
               className="p-3 rounded-md bg-pink-50"
-              href={`/list/exams?teacherId=${'teacher2'}`}
+              href={`/list/exams?teacherId=${teacher.id}`}
             >
               Teacher&apos;s Exams
             </Link>
             <Link
               className="p-3 rounded-md bg-skyLight"
-              href={`/list/assignments?teacherId=${'teacher2'}`}
+              href={`/list/assignments?teacherId=${teacher.id}`}
             >
               Teacher&apos;s Assignments
             </Link>
