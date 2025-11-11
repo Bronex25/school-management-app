@@ -19,6 +19,7 @@ import {
 } from 'react'
 import { toast } from 'react-toastify'
 import { FormConatinerProps } from './FormContainer'
+import BigFormSkeleton from './skeletons/BigFormSkeleton'
 
 const deleteActionMap = {
   subject: deleteSubject,
@@ -36,10 +37,10 @@ const deleteActionMap = {
 }
 
 const TeacherForm = dynamic(() => import('./forms/TeacherForm'), {
-  loading: () => <h1>Loading...</h1>,
+  loading: () => <BigFormSkeleton />,
 })
 const StudentForm = dynamic(() => import('./forms/StudentForm'), {
-  loading: () => <h1>Loading...</h1>,
+  loading: () => <BigFormSkeleton />,
 })
 const SubjectForm = dynamic(() => import('./forms/SubjectForm'), {
   loading: () => <h1>Loading...</h1>,
