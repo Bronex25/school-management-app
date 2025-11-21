@@ -14,6 +14,14 @@ export const examSchema = z.object({
   lessonId: z.number({ message: 'Lesson is required' }),
 })
 
+export const announcementSchema = z.object({
+  id: z.number().optional(),
+  title: z.string().min(1, { message: 'Exam title is required' }),
+  description: z.string().min(12, { message: 'Description is required' }),
+  date: z.date({ message: 'Date is required' }),
+  classId: z.number().optional(),
+})
+
 export const classSchema = z.object({
   id: z.coerce.number().optional(),
   name: z.string().min(1, { message: 'Class name is required' }),
@@ -76,6 +84,7 @@ export const teacherSchema = z.object({
   subjects: z.array(z.string()).optional(),
 })
 
+export type AnnouncementSchema = z.infer<typeof announcementSchema>
 export type StudentSchema = z.infer<typeof studentSchema>
 export type TeacherSchema = z.infer<typeof teacherSchema>
 export type SubjectSchema = z.infer<typeof subjectSchema>

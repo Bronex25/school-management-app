@@ -3,6 +3,7 @@
 
 import { revalidatePath } from 'next/cache'
 import {
+  AnnouncementSchema,
   ClassSchema,
   ExamSchema,
   StudentSchema,
@@ -76,6 +77,73 @@ export const deleteSubject = async (
     })
 
     revalidatePath('/list/subjects')
+    return { success: true, error: false }
+  } catch (error) {
+    console.log(error)
+    return { success: false, error: true }
+  }
+}
+
+export const createAnnouncement = async (
+  currentState: CurrentState,
+  data: AnnouncementSchema,
+) => {
+  try {
+    await prisma.announcement.create({
+      data: {
+        title: data.title,
+        description: data.description,
+        date: data.date,
+        classId: data.classId,
+      },
+    })
+
+    revalidatePath('/list/announcements')
+    return { success: true, error: false }
+  } catch (error) {
+    console.log(error)
+    return { success: false, error: true }
+  }
+}
+
+export const updateAnnouncement = async (
+  currentState: CurrentState,
+  data: AnnouncementSchema,
+) => {
+  try {
+    await prisma.announcement.update({
+      where: {
+        id: data.id,
+      },
+      data: {
+        title: data.title,
+        description: data.description,
+        date: data.date,
+        classId: data.classId,
+      },
+    })
+
+    revalidatePath('/list/announcements')
+    return { success: true, error: false }
+  } catch (error) {
+    console.log(error)
+    return { success: false, error: true }
+  }
+}
+
+export const deleteAnnouncement = async (
+  currentState: CurrentState,
+  data: FormData,
+) => {
+  const id = data.get('id') as string
+  try {
+    await prisma.announcement.delete({
+      where: {
+        id: parseInt(id),
+      },
+    })
+
+    revalidatePath('/list/announcements')
     return { success: true, error: false }
   } catch (error) {
     console.log(error)

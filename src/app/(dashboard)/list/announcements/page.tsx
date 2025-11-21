@@ -9,6 +9,7 @@ import { auth } from '@clerk/nextjs/server'
 import { Announcement, Class, Prisma } from '@/generated/prisma'
 
 type AnnouncementList = Announcement & { class: Class }
+
 const AnnouncementListPage = async ({
   searchParams,
 }: {
@@ -64,7 +65,7 @@ const AnnouncementListPage = async ({
       </td>
     </tr>
   )
-  const { page, ...queryParams } = searchParams
+  const { page, ...queryParams } = await searchParams
 
   const p = page ? parseInt(page) : 1
 

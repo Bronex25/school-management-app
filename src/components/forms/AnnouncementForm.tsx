@@ -4,18 +4,15 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import InputField from '../InputField'
-import { ClassSchema, classSchema } from '@/lib/formValidationSchema'
-import { createClass, updateClass } from '@/lib/actions'
 import {
-  Dispatch,
-  SetStateAction,
-  startTransition,
-  useActionState,
-  useEffect,
-} from 'react'
+  AnnouncementSchema,
+  announcementSchema,
+} from '@/lib/formValidationSchema'
+import { createAnnouncement, updateAnnouncement } from '@/lib/actions'
+import { Dispatch, SetStateAction, useActionState, useEffect } from 'react'
 import { toast } from 'react-toastify'
 
-const ClassForm = ({
+const AnnouncementForm = ({
   type,
   data,
   setOpen,
@@ -30,12 +27,12 @@ const ClassForm = ({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ClassSchema>({
-    resolver: zodResolver(classSchema) as any,
+  } = useForm<AnnouncementSchema>({
+    resolver: zodResolver(announcementSchema) as any,
   })
 
   const [state, formAction] = useActionState(
-    type === 'create' ? createClass : updateClass,
+    type === 'create' ? createAnnouncement : updateAnnouncement,
     {
       success: false,
       error: false,
@@ -44,9 +41,7 @@ const ClassForm = ({
 
   const onSubmit = handleSubmit((data) => {
     console.log(data)
-    startTransition(() => {
-      formAction(data as unknown as ClassSchema)
-    })
+    formAction(data as AnnouncementSchema)
   })
 
   useEffect(() => {
@@ -56,28 +51,42 @@ const ClassForm = ({
     }
   }, [state, type, setOpen])
 
-  const { teachers, grades } = relativeData
+  const { classes } = relativeData
+  const defaultDateValue = data?.date
+    ? new Date(data.date).toISOString().split('T')[0]
+    : new Date().toISOString().split('T')[0]
 
   return (
     <form className="flex flex-col gap-8" onSubmit={onSubmit}>
       <h1 className="text-xl font-semibold">
-        {type === 'create' ? 'Create a new class' : 'Update the class'}
+        {type === 'create'
+          ? 'Create a new announcement'
+          : 'Update the announcement'}
       </h1>
 
       <div className="flex justify-between flex-wrap gap-4">
         <InputField
-          label="Class name"
-          name="name"
-          defaultValue={data?.name}
+          label="Announcement title"
+          name="title"
+          defaultValue={data?.title}
           register={register}
-          error={errors?.name}
+          error={errors?.title}
         />
         <InputField
-          label="Capacity"
-          name="capacity"
-          defaultValue={data?.capacity}
+          label="Description"
+          name="description"
+          defaultValue={data?.description}
           register={register}
-          error={errors?.capacity}
+          error={errors?.description}
+        />
+        <InputField
+          label="Date"
+          name="date"
+          type="date"
+          defaultValue={defaultDateValue}
+          register={register}
+          registerOptions={{ valueAsDate: true }}
+          error={errors?.date}
         />
         {data && (
           <InputField
@@ -85,31 +94,27 @@ const ClassForm = ({
             name="id"
             defaultValue={data?.id}
             register={register}
+            registerOptions={{ valueAsNumber: true }}
             error={errors?.id}
             hidden
           />
         )}
-
         <div className="flex flex-col gap-2 w-full md:w-1/4">
-          <label className="text-xs text-gray-500">Grade</label>
+          <label className="text-xs text-gray-500">Class</label>
           <select
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            {...register('gradeId')}
-            defaultValue={data?.gradeId}
+            {...register('classId', { valueAsNumber: true })}
+            defaultValue={data?.classId}
           >
-            {grades.map((grade: { id: number; level: number }) => (
-              <option
-                value={grade.id}
-                key={grade.id}
-                selected={data && grade.id === data.gradeId}
-              >
-                {grade.level}
+            {classes.map((classItem: { id: number; name: string }) => (
+              <option value={classItem.id} key={classItem.id}>
+                {classItem.name}
               </option>
             ))}
           </select>
-          {errors.gradeId?.message && (
+          {errors.classId?.message && (
             <p className="text-xs text-red-400">
-              {errors.gradeId.message.toString()}
+              {errors.classId.message.toString()}
             </p>
           )}
         </div>
@@ -124,4 +129,4 @@ const ClassForm = ({
   )
 }
 
-export default ClassForm
+export default AnnouncementForm

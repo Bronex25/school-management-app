@@ -8,7 +8,6 @@ import Image from 'next/image'
 import {
   Dispatch,
   SetStateAction,
-  startTransition,
   useActionState,
   useEffect,
   useState,
@@ -18,6 +17,8 @@ import { createTeacher, updateTeacher } from '@/lib/actions'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
 import { CldUploadWidget } from 'next-cloudinary'
+import UploadPhotoButton from '../UploadPhotoButton'
+import type { CloudinaryUploadWidgetInfo } from '@cloudinary-util/types'
 
 const TeacherForm = ({
   type,
@@ -38,7 +39,7 @@ const TeacherForm = ({
     resolver: zodResolver(teacherSchema),
   })
 
-  const [img, setImg] = useState<any>()
+  const [img, setImg] = useState<CloudinaryUploadWidgetInfo | null>(null)
 
   const [state, formAction] = useActionState(
     type === 'create' ? createTeacher : updateTeacher,
@@ -160,7 +161,7 @@ const TeacherForm = ({
         <div className="flex flex-col gap-2 w-full md:w-1/4">
           <label className="text-xs text-gray-500">Sex</label>
           <select
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full "
             {...register('sex')}
             defaultValue={data?.sex}
           >
@@ -193,25 +194,39 @@ const TeacherForm = ({
             </p>
           )}
         </div>
-        <CldUploadWidget
-          uploadPreset="school"
-          onSuccess={(result, { widget }) => {
-            setImg(result.info)
-            widget.close()
-          }}
-        >
-          {({ open }) => {
-            return (
-              <div
-                className="text-xs text-gray-500 flex items-center gap-2 cursor-pointer"
-                onClick={() => open()}
-              >
-                <Image src="/upload.png" alt="" width={28} height={28} />
-                <span>Upload a photo</span>
-              </div>
-            )
-          }}
-        </CldUploadWidget>
+        <div className="flex flex-col gap-2 w-full md:w-1/4 items-center justify-center">
+          <CldUploadWidget
+            uploadPreset="school"
+            onSuccess={(result, { widget }) => {
+              if (result?.info && typeof result.info !== 'string') {
+                setImg(result.info)
+              }
+              widget.close()
+            }}
+          >
+            {({ open }) => {
+              return (
+                <div
+                  className="text-xs text-gray-500 flex items-center gap-2 cursor-pointer"
+                  onClick={() => open()}
+                >
+                  <Image src="/upload.png" alt="" width={28} height={28} />
+                  <span>Upload a photo</span>
+                </div>
+              )
+            }}
+          </CldUploadWidget>
+          {img && (
+            <Image
+              src={img.secure_url}
+              alt="Teacher photo preview"
+              width={80}
+              height={80}
+              className="rounded-full w-20 h-20 object-cover"
+            />
+          )}
+        </div>
+        <UploadPhotoButton img={img} setImg={setImg}></UploadPhotoButton>
       </div>
       {state.error?.length > 0 &&
         state.error.map((err: { message: string }, i: number) => (

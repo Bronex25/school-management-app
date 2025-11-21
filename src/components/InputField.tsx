@@ -9,6 +9,7 @@ type InputFieldProps = {
   error?: any
   hidden?: boolean
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>
+  registerOptions?: Record<string, unknown>
 }
 
 const InputField = ({
@@ -19,6 +20,7 @@ const InputField = ({
   defaultValue,
   error,
   inputProps,
+  registerOptions,
   hidden,
 }: InputFieldProps) => {
   return (
@@ -26,7 +28,7 @@ const InputField = ({
       <label className="text-xs text-gray-500">{label}</label>
       <input
         type={type}
-        {...register(name)}
+        {...register(name, registerOptions)}
         className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
         {...inputProps}
         defaultValue={defaultValue}

@@ -34,7 +34,7 @@ export default function BigFormSkeleton() {
 
       <div className="h-4 w-40 bg-gray-300 rounded" />
 
-      <div className="h-10 w-28 bg-blue-300 rounded-md" />
+      <div className="h-10 w-full bg-blue-300 rounded-md " />
     </div>
   )
 }

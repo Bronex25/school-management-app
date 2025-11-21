@@ -2,6 +2,7 @@
 'use client'
 
 import {
+  deleteAnnouncement,
   deleteClass,
   deleteStudent,
   deleteSubject,
@@ -33,7 +34,7 @@ const deleteActionMap = {
   result: deleteSubject,
   attendance: deleteSubject,
   event: deleteSubject,
-  announcement: deleteSubject,
+  announcement: deleteAnnouncement,
 }
 
 const TeacherForm = dynamic(() => import('./forms/TeacherForm'), {
@@ -49,6 +50,9 @@ const ClassForm = dynamic(() => import('./forms/ClassForm'), {
   loading: () => <h1>Loading...</h1>,
 })
 const ExamForm = dynamic(() => import('./forms/ExamForm'), {
+  loading: () => <h1>Loading...</h1>,
+})
+const AnnouncementForm = dynamic(() => import('./forms/AnnouncementForm'), {
   loading: () => <h1>Loading...</h1>,
 })
 
@@ -94,6 +98,14 @@ const forms: {
   ),
   exam: (setOpen, type, data, relativeData) => (
     <ExamForm
+      type={type}
+      data={data}
+      setOpen={setOpen}
+      relativeData={relativeData}
+    />
+  ),
+  announcement: (setOpen, type, data, relativeData) => (
+    <AnnouncementForm
       type={type}
       data={data}
       setOpen={setOpen}
