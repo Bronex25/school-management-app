@@ -39,3 +39,18 @@ export const adjustScheduleToCurrentWeek = (
     }
   })
 }
+
+export const dateToString = (date: Date, withTime: boolean = false) => {
+  const dateObj = new Date(date)
+
+  if (withTime) {
+    const year = dateObj.getFullYear()
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0')
+    const day = String(dateObj.getDate()).padStart(2, '0')
+    const hours = String(dateObj.getHours()).padStart(2, '0')
+    const minutes = String(dateObj.getMinutes()).padStart(2, '0')
+    return `${year}-${month}-${day}T${hours}:${minutes}`
+  } else {
+    return dateObj.toISOString().split('T')[0]
+  }
+}

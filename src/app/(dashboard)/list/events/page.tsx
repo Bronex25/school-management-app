@@ -51,11 +51,11 @@ const columns = [
 ]
 const renderRow = (item: EventList) => (
   <tr
-    key={item.class.name}
+    key={item.id}
     className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-myPurple"
   >
     <td className="flex items-center gap-4 p-4">{item.title}</td>
-    <td>{item.class.name || '-'}</td>
+    <td>{item.class?.name || '-'}</td>
     <td className="hidden md:table-cell">
       {new Intl.DateTimeFormat('en-US').format(item.startTime)}
     </td>
@@ -90,9 +90,11 @@ const renderRow = (item: EventList) => (
 const EventListPage = async ({
   searchParams,
 }: {
-  searchParams: { [key: string]: string }
+  searchParams: Promise<{ [key: string]: string }> | { [key: string]: string }
 }) => {
-  const { page, ...queryParams } = await searchParams
+  const params =
+    searchParams instanceof Promise ? await searchParams : searchParams
+  const { page, ...queryParams } = params
 
   const currentPage = page ? parseInt(page) : 1
 
@@ -100,31 +102,41 @@ const EventListPage = async ({
 
   if (queryParams) {
     for (const [key, value] of Object.entries(queryParams)) {
-      switch (key) {
-        case 'search':
-          query.title = { contains: value, mode: 'insensitive' }
-          break
-        default:
-          break
+      if (value !== undefined) {
+        switch (key) {
+          case 'search':
+            query.title = { contains: value, mode: 'insensitive' }
+            break
+          default:
+            break
+        }
       }
     }
   }
-  const roleConditions = {
-    teacher: { lessons: { some: { teacherId: currentUserId! } } },
-    student: { students: { some: { id: currentUserId! } } },
-    parent: { students: { some: { parentId: currentUserId! } } },
-  }
 
-  query.OR = [
-    { classId: null },
-    {
-      class: roleConditions[role as keyof typeof roleConditions] || {},
-    },
-  ]
+  let where: Prisma.EventWhereInput = { ...query }
+
+  if (role !== 'admin') {
+    const roleConditions = {
+      teacher: { lessons: { some: { teacherId: currentUserId! } } },
+      student: { students: { some: { id: currentUserId! } } },
+      parent: { students: { some: { parentId: currentUserId! } } },
+    }
+
+    where = {
+      ...query,
+      OR: [
+        { classId: null },
+        {
+          class: roleConditions[role as keyof typeof roleConditions] || {},
+        },
+      ],
+    }
+  }
 
   const [data, count] = await prisma.$transaction([
     prisma.event.findMany({
-      where: query,
+      where,
       include: {
         class: true,
       },
@@ -132,7 +144,7 @@ const EventListPage = async ({
       skip: ITEM_PER_PAGE * (currentPage - 1),
     }),
     prisma.event.count({
-      where: query,
+      where,
     }),
   ])
 

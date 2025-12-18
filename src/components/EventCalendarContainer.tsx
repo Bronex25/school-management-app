@@ -7,9 +7,13 @@ import Link from 'next/link'
 const EventCalendarContainer = async ({
   searchParams,
 }: {
-  searchParams: { [keys: string]: string | undefined }
+  searchParams:
+    | Promise<{ [keys: string]: string | undefined }>
+    | { [keys: string]: string | undefined }
 }) => {
-  const { date } = await searchParams
+  const params =
+    searchParams instanceof Promise ? await searchParams : searchParams
+  const { date } = params
   return (
     <div className="bg-white p-4 rounded-md">
       <EventCalendar />

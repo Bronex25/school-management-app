@@ -3,7 +3,6 @@
 import {
   deleteAssignment,
   deleteClass,
-  deleteEvent,
   deleteExam,
   deleteLesson,
   deleteParent,
@@ -18,9 +17,10 @@ import { Dispatch, JSX, SetStateAction, useState } from 'react'
 import { toast } from 'react-toastify'
 import { FormConatinerProps } from './FormContainer'
 import BigFormSkeleton from './skeletons/BigFormSkeleton'
-import EventForm from './forms/EventForm'
+import EventForm from '../features/events/EventForm'
 import { deleteAnnouncement } from '@/features/announcements/announcements.actions'
 import { SmallFormSkeleton } from './skeletons/SmallFormSkeleton'
+import { deleteEvent } from '@/features/events/events.actions'
 
 type TableName = FormConatinerProps['table']
 

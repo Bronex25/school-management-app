@@ -42,6 +42,7 @@ export const updateAnnouncement = async (
         classId: data.classId,
       },
     })
+
     revalidatePath('/list/announcements')
     return { success: true, error: false }
   } catch (error) {

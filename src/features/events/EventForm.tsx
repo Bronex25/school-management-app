@@ -3,31 +3,28 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import InputField from '../../components/InputField'
+
 import { Dispatch, SetStateAction, useState } from 'react'
 import { toast } from 'react-toastify'
-import { createAnnouncement, updateAnnouncement } from './announcements.actions'
-import {
-  AnnouncementFormValues,
-  AnnouncementSchema,
-  announcementSchema,
-} from './announcements.schema'
+import { EventFormValues, EventSchema, eventSchema } from './events.schema'
+import { createEvent, updateEvent } from './events.actions'
 import { dateToString } from '@/lib/utils'
 
-type AnnouncementFormProps = {
+type EventFormProps = {
   type: 'create' | 'update'
   data?: unknown
   setOpen: Dispatch<SetStateAction<boolean>>
   relativeData?: unknown
 }
 
-export default function AnnouncementForm({
+export default function EventForm({
   type,
   data,
   setOpen,
   relativeData,
-}: AnnouncementFormProps) {
-  const announcementData = data as Partial<AnnouncementSchema> | undefined
-  const announcementRelativeData = (relativeData as {
+}: EventFormProps) {
+  const eventData = data as Partial<EventSchema> | undefined
+  const eventRelativeData = (relativeData as {
     classes: { id: number; name: string }[]
   }) || { classes: [] }
 
@@ -35,20 +32,23 @@ export default function AnnouncementForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<AnnouncementFormValues>({
-    resolver: zodResolver(announcementSchema),
+  } = useForm<EventFormValues>({
+    resolver: zodResolver(eventSchema),
     defaultValues: {
-      title: announcementData?.title ?? '',
-      description: announcementData?.description ?? '',
-      date: announcementData?.date
-        ? dateToString(announcementData.date)
-        : dateToString(new Date()),
+      title: eventData?.title ?? '',
+      description: eventData?.description ?? '',
+      startTime: eventData?.startTime
+        ? dateToString(eventData.startTime, true)
+        : dateToString(new Date(), true),
+      endTime: eventData?.endTime
+        ? dateToString(eventData.endTime, true)
+        : dateToString(new Date(), true),
       classId:
-        announcementData?.classId ??
-        (announcementRelativeData.classes.length
-          ? announcementRelativeData.classes[0].id
+        eventData?.classId ??
+        (eventRelativeData.classes.length
+          ? eventRelativeData.classes[0].id
           : undefined),
-      id: announcementData?.id,
+      id: eventData?.id,
     },
   })
 
@@ -57,14 +57,12 @@ export default function AnnouncementForm({
   const onSubmit = handleSubmit(async (formValues) => {
     setIsPending(true)
     try {
-      const parsed = announcementSchema.parse(formValues)
-      const action = type === 'create' ? createAnnouncement : updateAnnouncement
+      const parsed = eventSchema.parse(formValues)
+      const action = type === 'create' ? createEvent : updateEvent
       const result = await action({ success: false, error: false }, parsed)
 
       if (result.success) {
-        toast(
-          `Announcement has been ${type === 'create' ? 'created' : 'updated'}`,
-        )
+        toast(`Event has been ${type === 'create' ? 'created' : 'updated'}`)
         setOpen(false)
       } else {
         if (Array.isArray(result.error)) {
@@ -76,7 +74,7 @@ export default function AnnouncementForm({
         }
       }
     } catch (error) {
-      toast.error('Failed to save announcement')
+      toast.error('Failed to save Event')
       console.error(error)
     } finally {
       setIsPending(false)
@@ -86,53 +84,45 @@ export default function AnnouncementForm({
   return (
     <form className="flex flex-col gap-8" onSubmit={onSubmit}>
       <h1 className="text-xl font-semibold">
-        {type === 'create'
-          ? 'Create a new announcement'
-          : 'Update the announcement'}
+        {type === 'create' ? 'Create a new event' : 'Update the event'}
       </h1>
 
       <div className="flex justify-between flex-wrap gap-4">
         <InputField
-          label="Announcement title"
+          label="Event title"
           name="title"
           register={register}
-          error={errors.title}
+          error={errors?.title}
         />
-
         <InputField
           label="Description"
           name="description"
           register={register}
-          error={errors.description}
+          error={errors?.description}
         />
-
         <InputField
-          label="Date"
-          name="date"
-          type="date"
+          label="Start time"
+          name="startTime"
           register={register}
           registerOptions={{ valueAsDate: true }}
-          error={errors.date}
+          error={errors?.startTime}
+          type="datetime-local"
         />
-
-        {announcementData?.id && (
-          <InputField
-            label="Id"
-            name="id"
-            register={register}
-            registerOptions={{ valueAsNumber: true }}
-            error={errors.id}
-            hidden
-          />
-        )}
-
+        <InputField
+          label="End time"
+          name="endTime"
+          register={register}
+          registerOptions={{ valueAsDate: true }}
+          error={errors?.endTime}
+          type="datetime-local"
+        />
         <div className="flex flex-col gap-2 w-full md:w-1/4">
           <label className="text-xs text-gray-500">Class</label>
           <select
             {...register('classId', { valueAsNumber: true })}
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
           >
-            {announcementRelativeData.classes.map((c) => (
+            {eventRelativeData.classes.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
               </option>
@@ -143,7 +133,6 @@ export default function AnnouncementForm({
           )}
         </div>
       </div>
-
       <button
         type="submit"
         disabled={isPending}
