@@ -1,4 +1,5 @@
 import FormModal from '@/components/FormModal'
+import FormContainer from '@/components/FormContainer'
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
@@ -77,7 +78,7 @@ const renderRow = (item: EventList) => (
       <div className="flex items-center gap-2">
         {role === 'admin' && (
           <>
-            <FormModal table="event" type="update" data={item} />
+            <FormContainer table="event" type="update" data={item} />
             <FormModal table="event" type="delete" id={item.id} />
           </>
         )}
@@ -159,7 +160,7 @@ const EventListPage = async ({
                 height={14}
               ></Image>
             </button>
-            {role === 'admin' && <FormModal table="event" type="delete" />}
+            {role === 'admin' && <FormContainer table="event" type="create" />}
           </div>
         </div>
       </div>

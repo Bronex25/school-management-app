@@ -14,14 +14,6 @@ export const examSchema = z.object({
   lessonId: z.number({ message: 'Lesson is required' }),
 })
 
-export const announcementSchema = z.object({
-  id: z.number().optional(),
-  title: z.string().min(1, { message: 'Exam title is required' }),
-  description: z.string().min(12, { message: 'Description is required' }),
-  date: z.date({ message: 'Date is required' }),
-  classId: z.number().optional(),
-})
-
 export const classSchema = z.object({
   id: z.coerce.number().optional(),
   name: z.string().min(1, { message: 'Class name is required' }),
@@ -84,9 +76,89 @@ export const teacherSchema = z.object({
   subjects: z.array(z.string()).optional(),
 })
 
-export type AnnouncementSchema = z.infer<typeof announcementSchema>
+export const eventSchema = z.object({
+  id: z.number().optional(),
+  title: z.string().min(1, { message: 'Event title is required' }),
+  description: z.string().min(12, { message: 'Description is required' }),
+  startTime: z.coerce.date({ message: 'Start time is required' }),
+  endTime: z.coerce.date({ message: 'End time is required' }),
+  classId: z.coerce.number().optional(),
+})
+
+export const parentSchema = z.object({
+  id: z.string().optional(),
+  username: z
+    .string()
+    .min(3, { message: 'Username must be at least 3 characters long!' })
+    .max(20, { message: 'Username must be at most 20 characters long!' }),
+  password: z
+    .string()
+    .min(8, { message: 'Password must be at least 8 characters long!' })
+    .or(z.literal('')),
+  name: z.string().min(1, { message: 'First name is required!' }),
+  surname: z.string().min(1, { message: 'Last name is required!' }),
+  email: z
+    .string()
+    .email({ message: 'Invalid email address!' })
+    .optional()
+    .or(z.literal('')),
+  phone: z.string().min(1, { message: 'Phone is required!' }),
+  address: z.string().min(1, { message: 'Address is required!' }),
+})
+
+export const lessonSchema = z
+  .object({
+    id: z.number().optional(),
+    name: z.string().min(1, { message: 'Lesson name is required' }),
+    day: z.enum(['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY']),
+    startTime: z.coerce.date({ message: 'Start time is required' }),
+    endTime: z.coerce.date({ message: 'End time is required' }),
+    subjectId: z.coerce.number({ message: 'Subject is required' }),
+    classId: z.coerce.number({ message: 'Class is required' }),
+    teacherId: z.string().min(1, { message: 'Teacher is required' }),
+  })
+  .refine((data) => data.startTime < data.endTime, {
+    message: 'End time must be after start time',
+    path: ['endTime'],
+  })
+
+export const assignmentSchema = z
+  .object({
+    id: z.number().optional(),
+    title: z.string().min(1, { message: 'Assignment title is required' }),
+    startDate: z.coerce.date({ message: 'Start date is required' }),
+    dueDate: z.coerce.date({ message: 'Due date is required' }),
+    lessonId: z.coerce.number({ message: 'Lesson is required' }),
+  })
+  .refine((data) => data.startDate <= data.dueDate, {
+    message: 'Due date must be after start date',
+    path: ['dueDate'],
+  })
+
+export const resultSchema = z
+  .object({
+    id: z.number().optional(),
+    score: z.coerce.number().min(0, { message: 'Score is required' }),
+    examId: z.coerce.number().optional(),
+    assignmentId: z.coerce.number().optional(),
+    studentId: z.string().min(1, { message: 'Student is required' }),
+  })
+  .refine((data) => data.examId || data.assignmentId, {
+    message: 'Select an exam or assignment',
+    path: ['examId'],
+  })
+  .refine((data) => !(data.examId && data.assignmentId), {
+    message: 'Choose either an exam or an assignment, not both',
+    path: ['assignmentId'],
+  })
+
 export type StudentSchema = z.infer<typeof studentSchema>
 export type TeacherSchema = z.infer<typeof teacherSchema>
 export type SubjectSchema = z.infer<typeof subjectSchema>
 export type ExamSchema = z.infer<typeof examSchema>
 export type ClassSchema = z.infer<typeof classSchema>
+export type EventSchema = z.infer<typeof eventSchema>
+export type ParentSchema = z.infer<typeof parentSchema>
+export type LessonSchema = z.infer<typeof lessonSchema>
+export type AssignmentSchema = z.infer<typeof assignmentSchema>
+export type ResultSchema = z.infer<typeof resultSchema>

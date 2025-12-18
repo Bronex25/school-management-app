@@ -4,15 +4,18 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import InputField from '../InputField'
+import { EventSchema, eventSchema } from '@/lib/formValidationSchema'
+import { createEvent, updateEvent } from '@/lib/actions'
 import {
-  AnnouncementSchema,
-  announcementSchema,
-} from '@/lib/formValidationSchema'
-import { createAnnouncement, updateAnnouncement } from '@/lib/actions'
-import { Dispatch, SetStateAction, useActionState, useEffect } from 'react'
+  Dispatch,
+  SetStateAction,
+  startTransition,
+  useActionState,
+  useEffect,
+} from 'react'
 import { toast } from 'react-toastify'
 
-const AnnouncementForm = ({
+const EventForm = ({
   type,
   data,
   setOpen,
@@ -27,46 +30,49 @@ const AnnouncementForm = ({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<AnnouncementSchema>({
-    resolver: zodResolver(announcementSchema) as any,
+  } = useForm<EventSchema>({
+    resolver: zodResolver(eventSchema) as any,
   })
 
   const [state, formAction] = useActionState(
-    type === 'create' ? createAnnouncement : updateAnnouncement,
+    type === 'create' ? createEvent : (updateEvent as any),
     {
       success: false,
       error: false,
     },
   )
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data)
-    formAction(data as AnnouncementSchema)
+  const classes = relativeData?.classes || []
+
+  const onSubmit = handleSubmit((formValues) => {
+    startTransition(() => {
+      const classIdValue =
+        formValues.classId === undefined || Number.isNaN(formValues.classId)
+          ? undefined
+          : formValues.classId
+      ;(formAction as any)({
+        ...formValues,
+        classId: classIdValue,
+      })
+    })
   })
 
   useEffect(() => {
-    if (state.success) {
-      toast(`Class has been ${type === 'create' ? 'created' : 'updated'}`)
+    if (state?.success) {
+      toast(`Event has been ${type === 'create' ? 'created' : 'updated'}`)
       setOpen(false)
     }
   }, [state, type, setOpen])
 
-  const { classes } = relativeData
-  const defaultDateValue = data?.date
-    ? new Date(data.date).toISOString().split('T')[0]
-    : new Date().toISOString().split('T')[0]
-
   return (
     <form className="flex flex-col gap-8" onSubmit={onSubmit}>
       <h1 className="text-xl font-semibold">
-        {type === 'create'
-          ? 'Create a new announcement'
-          : 'Update the announcement'}
+        {type === 'create' ? 'Create a new event' : 'Update the event'}
       </h1>
 
       <div className="flex justify-between flex-wrap gap-4">
         <InputField
-          label="Announcement title"
+          label="Event title"
           name="title"
           defaultValue={data?.title}
           register={register}
@@ -80,32 +86,39 @@ const AnnouncementForm = ({
           error={errors?.description}
         />
         <InputField
-          label="Date"
-          name="date"
-          type="date"
-          defaultValue={defaultDateValue}
+          label="Start time"
+          name="startTime"
+          defaultValue={
+            data?.startTime
+              ? new Date(data.startTime).toISOString().slice(0, 16)
+              : undefined
+          }
           register={register}
           registerOptions={{ valueAsDate: true }}
-          error={errors?.date}
+          error={errors?.startTime}
+          type="datetime-local"
         />
-        {data && (
-          <InputField
-            label="Id"
-            name="id"
-            defaultValue={data?.id}
-            register={register}
-            registerOptions={{ valueAsNumber: true }}
-            error={errors?.id}
-            hidden
-          />
-        )}
+        <InputField
+          label="End time"
+          name="endTime"
+          defaultValue={
+            data?.endTime
+              ? new Date(data.endTime).toISOString().slice(0, 16)
+              : undefined
+          }
+          register={register}
+          registerOptions={{ valueAsDate: true }}
+          error={errors?.endTime}
+          type="datetime-local"
+        />
         <div className="flex flex-col gap-2 w-full md:w-1/4">
           <label className="text-xs text-gray-500">Class</label>
           <select
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
             {...register('classId', { valueAsNumber: true })}
-            defaultValue={data?.classId}
+            defaultValue={data?.classId ?? ''}
           >
+            <option value="">No class</option>
             {classes.map((classItem: { id: number; name: string }) => (
               <option value={classItem.id} key={classItem.id}>
                 {classItem.name}
@@ -129,4 +142,4 @@ const AnnouncementForm = ({
   )
 }
 
-export default AnnouncementForm
+export default EventForm

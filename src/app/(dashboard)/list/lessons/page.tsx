@@ -1,3 +1,4 @@
+import FormContainer from '@/components/FormContainer'
 import FormModal from '@/components/FormModal'
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
@@ -32,11 +33,11 @@ const columns = [
   },
   ...(role === 'admin'
     ? [
-        {
-          header: 'Actions',
-          accessor: 'action',
-        },
-      ]
+      {
+        header: 'Actions',
+        accessor: 'action',
+      },
+    ]
     : []),
 ]
 const renderRow = (item: LessonList) => (
@@ -53,7 +54,7 @@ const renderRow = (item: LessonList) => (
       <div className="flex items-center gap-2">
         {role === 'admin' && (
           <>
-            <FormModal table="lesson" type="update" data={item} />
+            <FormContainer table="lesson" type="update" data={item} />
             <FormModal table="lesson" type="delete" id={item.id} />
           </>
         )}
@@ -133,7 +134,9 @@ const LessonListPage = async ({
                 height={14}
               ></Image>
             </button>
-            {role === 'admin' && <FormModal table="lesson" type="create" />}
+            {role === 'admin' && (
+              <FormContainer table="lesson" type="create" />
+            )}
           </div>
         </div>
       </div>

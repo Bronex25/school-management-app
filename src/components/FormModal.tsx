@@ -1,69 +1,125 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import {
-  deleteAnnouncement,
+  deleteAssignment,
   deleteClass,
+  deleteEvent,
+  deleteExam,
+  deleteLesson,
+  deleteParent,
+  deleteResult,
   deleteStudent,
   deleteSubject,
   deleteTeacher,
 } from '@/lib/actions'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
-import {
-  Dispatch,
-  JSX,
-  SetStateAction,
-  useActionState,
-  useEffect,
-  useState,
-} from 'react'
+import { Dispatch, JSX, SetStateAction, useState } from 'react'
 import { toast } from 'react-toastify'
 import { FormConatinerProps } from './FormContainer'
 import BigFormSkeleton from './skeletons/BigFormSkeleton'
+import EventForm from './forms/EventForm'
+import { deleteAnnouncement } from '@/features/announcements/announcements.actions'
+import { SmallFormSkeleton } from './skeletons/SmallFormSkeleton'
 
-const deleteActionMap = {
-  subject: deleteSubject,
-  class: deleteClass,
-  teacher: deleteTeacher,
-  student: deleteStudent,
-  parentSubject: deleteSubject,
-  lesson: deleteSubject,
-  exam: deleteSubject,
-  assignment: deleteSubject,
-  result: deleteSubject,
-  attendance: deleteSubject,
-  event: deleteSubject,
-  announcement: deleteAnnouncement,
+type TableName = FormConatinerProps['table']
+
+type ModalFormProps = {
+  type: 'create' | 'update'
+  data?: unknown
+  setOpen: Dispatch<SetStateAction<boolean>>
+  relativeData?: unknown
 }
 
-const TeacherForm = dynamic(() => import('./forms/TeacherForm'), {
+type DeleteAction = (
+  state: {
+    success: boolean
+    error: boolean | { message: string }[] | false | true
+  },
+  data: FormData,
+) => Promise<{
+  success: boolean
+  error: boolean | { message: string }[] | false | true
+}>
+
+const deleteActionMap: Partial<Record<TableName, DeleteAction>> = {
+  subject: deleteSubject as DeleteAction,
+  class: deleteClass as DeleteAction,
+  teacher: deleteTeacher as DeleteAction,
+  student: deleteStudent as DeleteAction,
+  parent: deleteParent as DeleteAction,
+  lesson: deleteLesson as DeleteAction,
+  exam: deleteExam as DeleteAction,
+  assignment: deleteAssignment as DeleteAction,
+  result: deleteResult as DeleteAction,
+  event: deleteEvent as DeleteAction,
+  announcement: deleteAnnouncement as DeleteAction,
+}
+
+const TeacherForm = dynamic<ModalFormProps>(
+  () => import('./forms/TeacherForm'),
+  {
+    loading: () => <BigFormSkeleton />,
+  },
+)
+
+const StudentForm = dynamic<ModalFormProps>(
+  () => import('./forms/StudentForm'),
+  {
+    loading: () => <BigFormSkeleton />,
+  },
+)
+
+const SubjectForm = dynamic<ModalFormProps>(
+  () => import('./forms/SubjectForm'),
+  {
+    loading: () => <SmallFormSkeleton />,
+  },
+)
+
+const AnnouncementForm = dynamic<ModalFormProps>(
+  () => import('@/features/announcements/AnnouncementForm'),
+  {
+    loading: () => <SmallFormSkeleton />,
+  },
+)
+
+const ClassForm = dynamic<ModalFormProps>(() => import('./forms/ClassForm'), {
   loading: () => <BigFormSkeleton />,
-})
-const StudentForm = dynamic(() => import('./forms/StudentForm'), {
-  loading: () => <BigFormSkeleton />,
-})
-const SubjectForm = dynamic(() => import('./forms/SubjectForm'), {
-  loading: () => <h1>Loading...</h1>,
-})
-const ClassForm = dynamic(() => import('./forms/ClassForm'), {
-  loading: () => <h1>Loading...</h1>,
-})
-const ExamForm = dynamic(() => import('./forms/ExamForm'), {
-  loading: () => <h1>Loading...</h1>,
-})
-const AnnouncementForm = dynamic(() => import('./forms/AnnouncementForm'), {
-  loading: () => <h1>Loading...</h1>,
 })
 
-const forms: {
-  [key: string]: (
+const ExamForm = dynamic<ModalFormProps>(() => import('./forms/ExamForm'), {
+  loading: () => <SmallFormSkeleton />,
+})
+
+const LessonForm = dynamic<ModalFormProps>(() => import('./forms/LessonForm'), {
+  loading: () => <SmallFormSkeleton />,
+})
+const AssignmentForm = dynamic<ModalFormProps>(
+  () => import('./forms/AssignmentForm'),
+  {
+    loading: () => <SmallFormSkeleton />,
+  },
+)
+const ParentForm = dynamic<ModalFormProps>(
+  () => import('./forms/ParentForm').then((mod) => mod.default),
+  {
+    loading: () => <BigFormSkeleton />,
+  },
+)
+const ResultForm = dynamic<ModalFormProps>(() => import('./forms/ResultForm'), {
+  loading: () => <SmallFormSkeleton />,
+})
+
+const forms: Record<
+  Exclude<TableName, 'attendance'>,
+  (
     setOpen: Dispatch<SetStateAction<boolean>>,
     type: 'create' | 'update',
-    data?: any,
-    relativeData?: any,
+    data?: unknown,
+    relativeData?: unknown,
   ) => JSX.Element
-} = {
+> = {
   teacher: (setOpen, type, data, relativeData) => (
     <TeacherForm
       type={type}
@@ -96,6 +152,14 @@ const forms: {
       relativeData={relativeData}
     />
   ),
+  event: (setOpen, type, data, relativeData) => (
+    <EventForm
+      type={type}
+      data={data}
+      setOpen={setOpen}
+      relativeData={relativeData}
+    />
+  ),
   exam: (setOpen, type, data, relativeData) => (
     <ExamForm
       type={type}
@@ -112,6 +176,38 @@ const forms: {
       relativeData={relativeData}
     />
   ),
+  lesson: (setOpen, type, data, relativeData) => (
+    <LessonForm
+      type={type}
+      data={data}
+      setOpen={setOpen}
+      relativeData={relativeData}
+    />
+  ),
+  assignment: (setOpen, type, data, relativeData) => (
+    <AssignmentForm
+      type={type}
+      data={data}
+      setOpen={setOpen}
+      relativeData={relativeData}
+    />
+  ),
+  parent: (setOpen, type, data, relativeData) => (
+    <ParentForm
+      type={type}
+      data={data}
+      setOpen={setOpen}
+      relativeData={relativeData}
+    />
+  ),
+  result: (setOpen, type, data, relativeData) => (
+    <ResultForm
+      type={type}
+      data={data}
+      setOpen={setOpen}
+      relativeData={relativeData}
+    />
+  ),
 }
 
 const FormModal = ({
@@ -120,7 +216,7 @@ const FormModal = ({
   data,
   id,
   relativeData,
-}: FormConatinerProps & { relativeData?: any }) => {
+}: FormConatinerProps & { relativeData?: unknown }) => {
   const size = type === 'create' ? 'w-8 h-8' : 'w-7 h-7'
   const bgColor =
     type === 'create'
@@ -131,34 +227,42 @@ const FormModal = ({
 
   const [open, setOpen] = useState(false)
 
-  const deleteAction =
-    table in deleteActionMap
-      ? deleteActionMap[table as keyof typeof deleteActionMap]
-      : undefined
-  const [state, formAction] = useActionState(
-    deleteAction ?? (async () => ({ success: false, error: true })),
-    {
-      success: false,
-      error: false,
-    },
-  )
+  const deleteAction = deleteActionMap[table]
 
-  useEffect(() => {
-    if (state.success) {
+  if (type === 'delete' && !deleteAction) {
+    throw new Error(`Delete action missing for table: ${table}`)
+  }
+
+  const handleDeleteSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (!deleteAction) return
+
+    const formData = new FormData(e.currentTarget)
+    const result = await deleteAction(
+      { success: false, error: false },
+      formData,
+    )
+
+    if (result.success) {
       toast(`${table} has been deleted!`)
       setOpen(false)
+    } else {
+      toast.error(`Failed to delete ${table}`)
     }
-  }, [state, table])
+  }
 
   const Form = () => {
     if (type === 'delete' && id) {
       return (
-        <form action={formAction} className="p-4 flex flex-col gap-4">
+        <form onSubmit={handleDeleteSubmit} className="p-4 flex flex-col gap-4">
           <input type="hidden" name="id" value={id} />
           <span className="text-center font-medium">
             All data will be lost. Are you sure you want to delete this {table}?
           </span>
-          <button className="bg-red-700 text-white py-2 px-4 rounded-md border-none w-max self-center cursor-pointer">
+          <button
+            type="submit"
+            className="bg-red-700 text-white py-2 px-4 rounded-md border-none w-max self-center cursor-pointer"
+          >
             Delete
           </button>
         </form>

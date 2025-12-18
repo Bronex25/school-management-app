@@ -103,12 +103,6 @@ const menuItems = [
         href: '/settings',
         visible: ['admin', 'teacher', 'student', 'parent'],
       },
-      {
-        icon: '/logout.png',
-        label: 'Logout',
-        href: '/logout',
-        visible: ['admin', 'teacher', 'student', 'parent'],
-      },
     ],
   },
 ]
@@ -117,6 +111,7 @@ import { currentUser } from '@clerk/nextjs/server'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
+import SignOutBtn from './SignOutBtn'
 
 const Menu = async () => {
   const user = await currentUser()
@@ -144,6 +139,7 @@ const Menu = async () => {
           })}
         </div>
       ))}
+      <SignOutBtn />
     </div>
   )
 }

@@ -21,7 +21,7 @@ const UserCard: React.FC<Props> = async ({ type }) => {
         <span className="text-[10px] bg-white px-2 py-1 rounded-full text-green-600">
           2024/25
         </span>
-        <Link href={type === 'admins' ? `/list/${type}` : '/'}>
+        <Link href={type !== 'admins' ? `/list/${type}` : '/'}>
           <Image src="/more.png" alt="More pic" width={20} height={20} />
         </Link>
       </div>
