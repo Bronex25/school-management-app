@@ -210,7 +210,6 @@ export const deleteClass = async (
   }
 }
 
-
 export const createStudent = async (
   currentState: CurrentState,
   data: StudentSchema,
@@ -670,63 +669,3 @@ export const deleteAssignment = async (
   }
 }
 
-export const createResult = async (
-  currentState: CurrentState,
-  data: ResultSchema,
-) => {
-  try {
-    await prisma.result.create({
-      data: {
-        score: data.score,
-        examId: data.examId,
-        assignmentId: data.assignmentId,
-        studentId: data.studentId,
-      },
-    })
-    revalidatePath('/list/results')
-    return { success: true, error: false }
-  } catch (error) {
-    console.log(error)
-    return { success: false, error: true }
-  }
-}
-
-export const updateResult = async (
-  currentState: CurrentState,
-  data: ResultSchema,
-) => {
-  if (!data.id) return { success: false, error: true }
-  try {
-    await prisma.result.update({
-      where: { id: data.id },
-      data: {
-        score: data.score,
-        examId: data.examId,
-        assignmentId: data.assignmentId,
-        studentId: data.studentId,
-      },
-    })
-    revalidatePath('/list/results')
-    return { success: true, error: false }
-  } catch (error) {
-    console.log(error)
-    return { success: false, error: true }
-  }
-}
-
-export const deleteResult = async (
-  currentState: CurrentState,
-  data: FormData,
-) => {
-  const id = data.get('id') as string
-  try {
-    await prisma.result.delete({
-      where: { id: parseInt(id) },
-    })
-    revalidatePath('/list/results')
-    return { success: true, error: false }
-  } catch (error) {
-    console.log(error)
-    return { success: false, error: true }
-  }
-}

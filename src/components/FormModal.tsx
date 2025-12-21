@@ -6,7 +6,6 @@ import {
   deleteExam,
   deleteLesson,
   deleteParent,
-  deleteResult,
   deleteStudent,
   deleteSubject,
   deleteTeacher,
@@ -21,6 +20,7 @@ import EventForm from '../features/events/EventForm'
 import { deleteAnnouncement } from '@/features/announcements/announcements.actions'
 import { SmallFormSkeleton } from './skeletons/SmallFormSkeleton'
 import { deleteEvent } from '@/features/events/events.actions'
+import { deleteResult } from '@/features/results/results.actions'
 
 type TableName = FormConatinerProps['table']
 
@@ -107,9 +107,12 @@ const ParentForm = dynamic<ModalFormProps>(
     loading: () => <BigFormSkeleton />,
   },
 )
-const ResultForm = dynamic<ModalFormProps>(() => import('./forms/ResultForm'), {
-  loading: () => <SmallFormSkeleton />,
-})
+const ResultForm = dynamic<ModalFormProps>(
+  () => import('../features/results/ResultForm'),
+  {
+    loading: () => <SmallFormSkeleton />,
+  },
+)
 
 const forms: Record<
   Exclude<TableName, 'attendance'>,

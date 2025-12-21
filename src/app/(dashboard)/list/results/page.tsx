@@ -80,13 +80,12 @@ const renderRow = (item: ResultList) => (
     </td>
     <td>
       <div className="flex items-center gap-2">
-        {role === 'admin' ||
-          (role === 'teacher' && (
-            <>
-              <FormContainer table="result" type="update" data={item} />
-              <FormContainer table="result" type="delete" id={item.id} />
-            </>
-          ))}
+        {(role === 'admin' || role === 'teacher') && (
+          <>
+            <FormContainer table="result" type="update" data={item} />
+            <FormContainer table="result" type="delete" id={item.id} />
+          </>
+        )}
       </div>
     </td>
   </tr>
@@ -216,10 +215,9 @@ const ResultListPage = async ({
                 height={14}
               ></Image>
             </button>
-            {role === 'admin' ||
-              (role === 'teacher' && (
-                <FormContainer table="result" type="create" />
-              ))}
+            {(role === 'admin' || role === 'teacher') && (
+              <FormContainer table="result" type="create" />
+            )}
           </div>
         </div>
       </div>

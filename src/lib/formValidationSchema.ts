@@ -126,22 +126,6 @@ export const assignmentSchema = z
     path: ['dueDate'],
   })
 
-export const resultSchema = z
-  .object({
-    id: z.number().optional(),
-    score: z.coerce.number().min(0, { message: 'Score is required' }),
-    examId: z.coerce.number().optional(),
-    assignmentId: z.coerce.number().optional(),
-    studentId: z.string().min(1, { message: 'Student is required' }),
-  })
-  .refine((data) => data.examId || data.assignmentId, {
-    message: 'Select an exam or assignment',
-    path: ['examId'],
-  })
-  .refine((data) => !(data.examId && data.assignmentId), {
-    message: 'Choose either an exam or an assignment, not both',
-    path: ['assignmentId'],
-  })
 
 export type StudentSchema = z.infer<typeof studentSchema>
 export type TeacherSchema = z.infer<typeof teacherSchema>
@@ -151,4 +135,3 @@ export type ClassSchema = z.infer<typeof classSchema>
 export type ParentSchema = z.infer<typeof parentSchema>
 export type LessonSchema = z.infer<typeof lessonSchema>
 export type AssignmentSchema = z.infer<typeof assignmentSchema>
-export type ResultSchema = z.infer<typeof resultSchema>
