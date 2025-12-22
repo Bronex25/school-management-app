@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  deleteAssignment,
   deleteClass,
   deleteExam,
   deleteLesson,
@@ -21,6 +20,7 @@ import { deleteAnnouncement } from '@/features/announcements/announcements.actio
 import { SmallFormSkeleton } from './skeletons/SmallFormSkeleton'
 import { deleteEvent } from '@/features/events/events.actions'
 import { deleteResult } from '@/features/results/results.actions'
+import { deleteAssignment } from '@/features/assignments/assignments.actions'
 
 type TableName = FormConatinerProps['table']
 
@@ -96,7 +96,7 @@ const LessonForm = dynamic<ModalFormProps>(() => import('./forms/LessonForm'), {
   loading: () => <SmallFormSkeleton />,
 })
 const AssignmentForm = dynamic<ModalFormProps>(
-  () => import('./forms/AssignmentForm'),
+  () => import('../features/assignments/AssignmentForm'),
   {
     loading: () => <SmallFormSkeleton />,
   },

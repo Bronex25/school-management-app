@@ -12,6 +12,7 @@ import {
   announcementSchema,
 } from './announcements.schema'
 import { dateToString } from '@/lib/utils'
+import FormButton from '@/components/FormButton'
 
 type AnnouncementFormProps = {
   type: 'create' | 'update'
@@ -144,15 +145,7 @@ export default function AnnouncementForm({
         </div>
       </div>
 
-      <button
-        type="submit"
-        disabled={isPending}
-        className={`p-2 rounded-md text-white ${
-          isPending ? 'bg-blue-300 cursor-not-allowed' : 'bg-blue-400'
-        }`}
-      >
-        {isPending ? 'Saving...' : type === 'create' ? 'Create' : 'Update'}
-      </button>
+      <FormButton isPending={isPending} type={type} />
     </form>
   )
 }

@@ -12,6 +12,7 @@ import {
   resultSchema,
 } from './results.schema'
 import { createResult, updateResult } from './results.actions'
+import FormButton from '@/components/FormButton'
 
 type ResultFormProps = {
   type: 'create' | 'update'
@@ -66,13 +67,10 @@ export default function ResultForm({
     async (formValues) => {
       setIsPending(true)
 
-      console.log('ZOD INPUT:', formValues)
-
       try {
         const parsed = resultSchema.parse(formValues)
         const action = type === 'create' ? createResult : updateResult
         const result = await action({ success: false, error: false }, parsed)
-        console.log('ZOD RESULT:', parsed)
         if (result.success) {
           toast(`Result has been ${type === 'create' ? 'created' : 'updated'}`)
           setOpen(false)
@@ -197,15 +195,7 @@ export default function ResultForm({
           />
         )}
       </div>
-      <button
-        type="submit"
-        disabled={isPending}
-        className={`p-2 rounded-md text-white ${
-          isPending ? 'bg-blue-300 cursor-not-allowed' : 'bg-blue-400'
-        }`}
-      >
-        {isPending ? 'Saving...' : type === 'create' ? 'Create' : 'Update'}
-      </button>
+      <FormButton isPending={isPending} type={type} />
     </form>
   )
 }
