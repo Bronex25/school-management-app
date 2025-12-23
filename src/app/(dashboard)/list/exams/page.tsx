@@ -128,11 +128,11 @@ const ExamListPage = async ({
     },
     ...(role === 'admin' || role === 'teacher'
       ? [
-        {
-          header: 'Actions',
-          accessor: 'action',
-        },
-      ]
+          {
+            header: 'Actions',
+            accessor: 'action',
+          },
+        ]
       : []),
   ]
 
