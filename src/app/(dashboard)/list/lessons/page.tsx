@@ -5,6 +5,7 @@ import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import { Class, Lesson, Prisma, Subject, Teacher } from '@/generated/prisma'
 import prisma from '@/lib/prisma'
+import { dateToString } from '@/lib/utils'
 import { ITEM_PER_PAGE } from '@/lib/variables'
 import { auth } from '@clerk/nextjs/server'
 import Image from 'next/image'
@@ -18,6 +19,24 @@ const { sessionClaims } = await auth()
 const role = (sessionClaims?.metadata as { role?: string }).role
 
 const columns = [
+  {
+    header: 'Name',
+    accessor: 'name',
+  },
+  {
+    header: 'Day',
+    accessor: 'day',
+  },
+  {
+    header: 'Start Time',
+    accessor: 'startTime',
+    className: 'hidden md:table-cell',
+  },
+  {
+    header: 'End Time',
+    accessor: 'endTime',
+    className: 'hidden md:table-cell',
+  },
   {
     header: 'Subject Name',
     accessor: 'name',
@@ -33,11 +52,11 @@ const columns = [
   },
   ...(role === 'admin'
     ? [
-      {
-        header: 'Actions',
-        accessor: 'action',
-      },
-    ]
+        {
+          header: 'Actions',
+          accessor: 'action',
+        },
+      ]
     : []),
 ]
 const renderRow = (item: LessonList) => (
@@ -45,6 +64,22 @@ const renderRow = (item: LessonList) => (
     key={item.id}
     className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-myPurple"
   >
+    <td className="flex items-center gap-4 p-4">{item.name}</td>
+    <td>{item.day}</td>
+    <td className="hidden md:table-cell">
+      {item.startTime.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      })}
+    </td>
+    <td className="hidden md:table-cell">
+      {item.endTime.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      })}
+    </td>
     <td className="flex items-center gap-4 p-4">{item.subject.name}</td>
     <td>{item.class.name}</td>
     <td className="hidden md:table-cell">
@@ -134,9 +169,7 @@ const LessonListPage = async ({
                 height={14}
               ></Image>
             </button>
-            {role === 'admin' && (
-              <FormContainer table="lesson" type="create" />
-            )}
+            {role === 'admin' && <FormContainer table="lesson" type="create" />}
           </div>
         </div>
       </div>
