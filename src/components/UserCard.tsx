@@ -19,7 +19,7 @@ const UserCard: React.FC<Props> = async ({ type }) => {
     <div className="rounded-2xl odd:bg-mySky bg-myYellow p-4 flex-1 min-w-[130px]">
       <div className="flex justify-between items-center">
         <span className="text-[10px] bg-white px-2 py-1 rounded-full text-green-600">
-          2024/25
+          2026/27
         </span>
         <Link href={type !== 'admins' ? `/list/${type}` : '/'}>
           <Image src="/more.png" alt="More pic" width={20} height={20} />

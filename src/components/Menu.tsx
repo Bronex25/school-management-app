@@ -75,12 +75,6 @@ const menuItems = [
         visible: ['admin', 'teacher', 'student', 'parent'],
       },
       {
-        icon: '/message.png',
-        label: 'Messages',
-        href: '/list/messages',
-        visible: ['admin', 'teacher', 'student', 'parent'],
-      },
-      {
         icon: '/announcement.png',
         label: 'Announcements',
         href: '/list/announcements',
@@ -116,6 +110,7 @@ import SignOutBtn from './SignOutBtn'
 const Menu = async () => {
   const user = await currentUser()
   const role = user?.publicMetadata.role as string
+
   return (
     <div className="mt-4 text-sm">
       {menuItems.map((i) => (
