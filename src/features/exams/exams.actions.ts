@@ -10,7 +10,6 @@ export const createExam = async (
   data: ExamSchema,
 ): Promise<ExamActionState> => {
   try {
-    // Find lesson by subjectId and classId
     let lesson = await prisma.lesson.findFirst({
       where: {
         subjectId: data.subjectId,
@@ -18,9 +17,7 @@ export const createExam = async (
       },
     })
 
-    // If lesson doesn't exist, create it with default values
     if (!lesson) {
-      // Find first teacher for this subject
       const subject = await prisma.subject.findUnique({
         where: { id: data.subjectId },
         include: {
@@ -42,7 +39,6 @@ export const createExam = async (
         }
       }
 
-      // Create lesson with default values
       lesson = await prisma.lesson.create({
         data: {
           name: `${subject.name} - Exam`,
@@ -82,7 +78,6 @@ export const updateExam = async (
       return { success: false, error: [{ message: 'Exam ID is required' }] }
     }
 
-    // Find lesson by subjectId and classId
     let lesson = await prisma.lesson.findFirst({
       where: {
         subjectId: data.subjectId,
@@ -90,9 +85,7 @@ export const updateExam = async (
       },
     })
 
-    // If lesson doesn't exist, create it with default values
     if (!lesson) {
-      // Find first teacher for this subject
       const subject = await prisma.subject.findUnique({
         where: { id: data.subjectId },
         include: {
@@ -114,7 +107,6 @@ export const updateExam = async (
         }
       }
 
-      // Create lesson with default values
       lesson = await prisma.lesson.create({
         data: {
           name: `${subject.name} - Exam`,

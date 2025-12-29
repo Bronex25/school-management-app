@@ -1,11 +1,10 @@
 import { CldUploadWidget } from 'next-cloudinary'
 import Image from 'next/image'
 import type { Dispatch, SetStateAction } from 'react'
-import type { CloudinaryUploadWidgetInfo } from '@cloudinary-util/types'
 
 type UploadPhotoButtonProps = {
-  img: CloudinaryUploadWidgetInfo | null
-  setImg: Dispatch<SetStateAction<CloudinaryUploadWidgetInfo | null>>
+  img: string | undefined
+  setImg: Dispatch<SetStateAction<string | undefined>>
 }
 
 const UploadPhotoButton = ({ img, setImg }: UploadPhotoButtonProps) => {
@@ -15,7 +14,7 @@ const UploadPhotoButton = ({ img, setImg }: UploadPhotoButtonProps) => {
         uploadPreset="school"
         onSuccess={(result, { widget }) => {
           if (result?.info && typeof result.info !== 'string') {
-            setImg(result.info)
+            setImg(result.info.secure_url)
           }
           widget.close()
         }}
@@ -39,7 +38,7 @@ const UploadPhotoButton = ({ img, setImg }: UploadPhotoButtonProps) => {
       </CldUploadWidget>
       {img && (
         <Image
-          src={img.secure_url}
+          src={img}
           alt="Teacher photo preview"
           width={80}
           height={80}

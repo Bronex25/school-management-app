@@ -1,14 +1,5 @@
 'use client'
 
-import {
-  deleteClass,
-  deleteExam,
-  deleteLesson,
-  deleteParent,
-  deleteStudent,
-  deleteSubject,
-  deleteTeacher,
-} from '@/lib/actions'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { Dispatch, JSX, SetStateAction, useState } from 'react'
@@ -21,6 +12,13 @@ import { SmallFormSkeleton } from './skeletons/SmallFormSkeleton'
 import { deleteEvent } from '@/features/events/events.actions'
 import { deleteResult } from '@/features/results/results.actions'
 import { deleteAssignment } from '@/features/assignments/assignments.actions'
+import { deleteClass } from '@/features/classes/classes.actions'
+import { deleteExam } from '@/features/exams/exams.actions'
+import { deleteLesson } from '@/features/lessons/lessons.actions'
+import { deleteParent } from '@/features/parents/parents.actions'
+import { deleteStudent } from '@/features/students/students.actions'
+import { deleteSubject } from '@/features/subjects/subjects.actions'
+import { deleteTeacher } from '@/features/teachers/teachers.actions'
 
 type TableName = FormConatinerProps['table']
 
@@ -57,21 +55,21 @@ const deleteActionMap: Partial<Record<TableName, DeleteAction>> = {
 }
 
 const TeacherForm = dynamic<ModalFormProps>(
-  () => import('./forms/TeacherForm'),
+  () => import('@/features/teachers/TeacherForm'),
   {
     loading: () => <BigFormSkeleton />,
   },
 )
 
 const StudentForm = dynamic<ModalFormProps>(
-  () => import('./forms/StudentForm'),
+  () => import('@/features/students/StudentForm'),
   {
     loading: () => <BigFormSkeleton />,
   },
 )
 
 const SubjectForm = dynamic<ModalFormProps>(
-  () => import('./forms/SubjectForm'),
+  () => import('@/features/subjects/SubjectForm'),
   {
     loading: () => <SmallFormSkeleton />,
   },
@@ -84,17 +82,26 @@ const AnnouncementForm = dynamic<ModalFormProps>(
   },
 )
 
-const ClassForm = dynamic<ModalFormProps>(() => import('./forms/ClassForm'), {
-  loading: () => <BigFormSkeleton />,
-})
+const ClassForm = dynamic<ModalFormProps>(
+  () => import('@/features/classes/ClassForm'),
+  {
+    loading: () => <SmallFormSkeleton />,
+  },
+)
 
-const ExamForm = dynamic<ModalFormProps>(() => import('./forms/ExamForm'), {
-  loading: () => <SmallFormSkeleton />,
-})
+const ExamForm = dynamic<ModalFormProps>(
+  () => import('@/features/exams/ExamForm'),
+  {
+    loading: () => <SmallFormSkeleton />,
+  },
+)
 
-const LessonForm = dynamic<ModalFormProps>(() => import('./forms/LessonForm'), {
-  loading: () => <SmallFormSkeleton />,
-})
+const LessonForm = dynamic<ModalFormProps>(
+  () => import('@/features/lessons/LessonForm'),
+  {
+    loading: () => <SmallFormSkeleton />,
+  },
+)
 const AssignmentForm = dynamic<ModalFormProps>(
   () => import('../features/assignments/AssignmentForm'),
   {
@@ -102,7 +109,7 @@ const AssignmentForm = dynamic<ModalFormProps>(
   },
 )
 const ParentForm = dynamic<ModalFormProps>(
-  () => import('./forms/ParentForm').then((mod) => mod.default),
+  () => import('@/features/parents/ParentForm'),
   {
     loading: () => <BigFormSkeleton />,
   },
