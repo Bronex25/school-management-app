@@ -43,6 +43,15 @@ export default function ParentForm({ type, data, setOpen }: ParentFormProps) {
     async (formValues) => {
       setIsPending(true)
       try {
+        if (
+          type === 'create' &&
+          (!formValues.password || formValues.password.trim() === '')
+        ) {
+          toast.error('Password is required when creating a parent.')
+          setIsPending(false)
+          return
+        }
+
         const action = type === 'create' ? createParent : updateParent
         const result = await action(
           { success: false, error: false },
@@ -59,6 +68,8 @@ export default function ParentForm({ type, data, setOpen }: ParentFormProps) {
             })
           } else if (result.error === true) {
             toast.error('Something went wrong!')
+          } else {
+            toast.error('An unknown error occurred. Please try again.')
           }
         }
       } catch (error) {
