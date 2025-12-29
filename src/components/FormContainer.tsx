@@ -27,9 +27,15 @@ type RelatedData = {
   teachers?: { id: string | number; name: string; surname?: string }[]
   grades?: { id: number; level: number }[]
   subjects?: { id: number; name: string }[]
-  classes?: { id: number; name?: string; _count?: { students: number } }[]
+  classes?: {
+    id: number
+    name?: string
+    capacity?: number
+    _count?: { students: number }
+  }[]
   lessons?: { id: number; name: string }[]
   students?: { id: string; name: string; surname: string }[]
+  parents?: { id: string; name: string; surname: string }[]
   exams?: { id: number; title: string }[]
   assignments?: { id: number; title: string }[]
 }
@@ -67,17 +73,26 @@ const FormContainer = async ({ table, type, data, id }: FormConatinerProps) => {
         break
       }
       case 'student': {
-        const [studentGrades, studentClasses] = await Promise.all([
-          prisma.grade.findMany({ select: { id: true, level: true } }),
-          prisma.class.findMany({
-            select: {
-              id: true,
-              name: true,
-              _count: { select: { students: true } },
-            },
-          }),
-        ])
-        relatedData = { classes: studentClasses, grades: studentGrades }
+        const [studentGrades, studentClasses, studentParents] =
+          await Promise.all([
+            prisma.grade.findMany({ select: { id: true, level: true } }),
+            prisma.class.findMany({
+              select: {
+                id: true,
+                name: true,
+                capacity: true,
+                _count: { select: { students: true } },
+              },
+            }),
+            prisma.parent.findMany({
+              select: { id: true, name: true, surname: true },
+            }),
+          ])
+        relatedData = {
+          classes: studentClasses,
+          grades: studentGrades,
+          parents: studentParents,
+        }
         break
       }
       case 'exam': {
