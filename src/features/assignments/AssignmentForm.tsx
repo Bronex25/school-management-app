@@ -55,8 +55,6 @@ export default function AssignmentForm({
     },
   })
 
-  console.log(assignmentRelativeData.lessons)
-
   const [isPending, setIsPending] = useState(false)
 
   const onSubmit = handleSubmit(
@@ -129,20 +127,29 @@ export default function AssignmentForm({
           <label className="text-xs text-gray-500">Lesson</label>
           <select
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            {...register('lessonId')}
+            {...register('lessonId', { valueAsNumber: true })}
             defaultValue={assignmentData?.lessonId}
           >
-            {assignmentRelativeData.lessons.map(
-              (lesson: { id: number; name: string }) => (
-                <option key={lesson.id} value={lesson.id}>
-                  {lesson.name}
-                </option>
-              ),
+            {assignmentRelativeData.lessons.length === 0 ? (
+              <option value="">No lessons available</option>
+            ) : (
+              assignmentRelativeData.lessons.map(
+                (lesson: { id: number; name: string }) => (
+                  <option key={lesson.id} value={lesson.id}>
+                    {lesson.name}
+                  </option>
+                ),
+              )
             )}
           </select>
           {errors.lessonId?.message && (
             <p className="text-xs text-red-400">
               {errors.lessonId.message.toString()}
+            </p>
+          )}
+          {assignmentRelativeData.lessons.length === 0 && (
+            <p className="text-xs text-yellow-600">
+              No lessons found. Please create lessons first.
             </p>
           )}
         </div>

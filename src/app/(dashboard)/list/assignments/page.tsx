@@ -65,13 +65,12 @@ const renderRow = (item: AssignmentList) => (
     </td>
     <td>
       <div className="flex items-center gap-2">
-        {role === 'admin' ||
-          (role === 'teacher' && (
-            <>
-              <FormModal table="assignment" type="update" data={item} />
-              <FormModal table="assignment" type="delete" id={item.id} />
-            </>
-          ))}
+        {(role === 'admin' || role === 'teacher') && (
+          <>
+            <FormModal table="assignment" type="update" data={item} />
+            <FormModal table="assignment" type="delete" id={item.id} />
+          </>
+        )}
       </div>
     </td>
   </tr>
