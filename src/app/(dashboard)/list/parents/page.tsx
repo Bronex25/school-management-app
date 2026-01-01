@@ -1,3 +1,4 @@
+import FormContainer from '@/components/FormContainer'
 import FormModal from '@/components/FormModal'
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
@@ -65,8 +66,8 @@ const renderRow = (item: ParentList) => (
       <div className="flex items-center gap-2">
         {role === 'admin' && (
           <>
-            <FormModal table="parent" type="update" data={item} />
-            <FormModal table="parent" type="delete" id={item.id} />
+            <FormContainer table="parent" type="update" data={item} />
+            <FormContainer table="parent" type="delete" id={item.id} />
           </>
         )}
       </div>
@@ -135,7 +136,7 @@ const ParentsListPage = async ({
                 height={14}
               ></Image>
             </button>
-            {role === 'admin' && <FormModal table="parent" type="create" />}
+            {role === 'admin' && <FormContainer table="parent" type="create" />}
           </div>
         </div>
       </div>

@@ -90,7 +90,7 @@ const renderRow = (item: LessonList) => (
         {role === 'admin' && (
           <>
             <FormContainer table="lesson" type="update" data={item} />
-            <FormModal table="lesson" type="delete" id={item.id} />
+            <FormContainer table="lesson" type="delete" id={item.id} />
           </>
         )}
       </div>

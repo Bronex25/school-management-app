@@ -21,6 +21,7 @@ export type FormConatinerProps = {
   type: 'create' | 'update' | 'delete'
   data?: unknown
   id?: number | string
+  isSubmit?: boolean
 }
 
 type RelatedData = {
@@ -40,7 +41,13 @@ type RelatedData = {
   assignments?: { id: number; title: string }[]
 }
 
-const FormContainer = async ({ table, type, data, id }: FormConatinerProps) => {
+const FormContainer = async ({
+  table,
+  type,
+  data,
+  id,
+  isSubmit,
+}: FormConatinerProps) => {
   const { sessionClaims, userId } = await auth()
   const role = (sessionClaims?.metadata as { role?: string } | undefined)?.role
 
@@ -195,6 +202,7 @@ const FormContainer = async ({ table, type, data, id }: FormConatinerProps) => {
         data={data}
         id={id}
         relativeData={relatedData}
+        isSubmit={isSubmit}
       />
     </div>
   )

@@ -19,6 +19,7 @@ import { deleteParent } from '@/features/parents/parents.actions'
 import { deleteStudent } from '@/features/students/students.actions'
 import { deleteSubject } from '@/features/subjects/subjects.actions'
 import { deleteTeacher } from '@/features/teachers/teachers.actions'
+import FormButton from './FormButton'
 
 type TableName = FormConatinerProps['table']
 
@@ -226,6 +227,7 @@ const FormModal = ({
   data,
   id,
   relativeData,
+  isSubmit,
 }: FormConatinerProps & { relativeData?: unknown }) => {
   const size = type === 'create' ? 'w-8 h-8' : 'w-7 h-7'
   const bgColor =
@@ -288,12 +290,23 @@ const FormModal = ({
 
   return (
     <>
-      <button
-        className={`${size} flex items-center justify-center rounded-full ${bgColor} cursor-pointer`}
-        onClick={() => setOpen(true)}
-      >
-        <Image src={`/${type}.png`} alt="" width={16} height={16} />
-      </button>
+      {isSubmit ? (
+        <button
+          type="submit"
+          onClick={() => setOpen(true)}
+          className={`p-2 rounded-md text-white bg-blue-400`}
+        >
+          Create
+        </button>
+      ) : (
+        <button
+          className={`${size} flex items-center justify-center rounded-full ${bgColor} cursor-pointer`}
+          onClick={() => setOpen(true)}
+        >
+          <Image src={`/${type}.png`} alt="" width={16} height={16} />
+        </button>
+      )}
+
       {open && (
         <div className="w-screen h-screen absolute left-0 top-0 bg-black bg-opacity-60 z-50 flex items-center justify-center">
           <div className="bg-white p-4 rounded-md relative w-[90%] md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]">

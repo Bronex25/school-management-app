@@ -79,7 +79,7 @@ const renderRow = (item: EventList) => (
         {role === 'admin' && (
           <>
             <FormContainer table="event" type="update" data={item} />
-            <FormModal table="event" type="delete" id={item.id} />
+            <FormContainer table="event" type="delete" id={item.id} />
           </>
         )}
       </div>
