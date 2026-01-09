@@ -15,16 +15,22 @@ const LoginPage = () => {
   const router = useRouter()
   const [isSignUp, setIsSignUp] = useState(false)
   const [role, setRole] = useState<Roles>('student')
+  const [isRedirecting, setIsRedirecting] = useState(false)
 
   useEffect(() => {
-    const role = user?.publicMetadata.role
+    if (!isLoaded) return
 
-    if (role) {
-      router.push(`/${role}`)
+    if (isSignedIn && user) {
+      const userRole = user.publicMetadata.role as Roles | undefined
+
+      if (userRole) {
+        setIsRedirecting(true)
+        router.push(`/${userRole}`)
+      }
     }
-  }, [user, router])
+  }, [isLoaded, isSignedIn, user, router])
 
-  if (!isLoaded)
+  if (!isLoaded || isRedirecting)
     return (
       <div className="h-screen flex justify-center items-center">
         <Atom />

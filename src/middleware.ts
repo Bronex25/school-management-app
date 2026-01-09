@@ -7,9 +7,19 @@ const matchers = Object.keys(routeAccessMap).map((route) => ({
   allowedRoles: routeAccessMap[route],
 }))
 
+const isSignInRoute = createRouteMatcher(['/sign-in(.*)', '/'])
+
 export default clerkMiddleware(async (auth, req) => {
-  const { sessionClaims } = await auth()
+  const { userId, sessionClaims } = await auth()
   const role = (sessionClaims?.metadata as { role?: string })?.role
+
+  if (isSignInRoute(req) && userId && role) {
+    return NextResponse.redirect(new URL(`/${role}`, req.url))
+  }
+
+  if (isSignInRoute(req)) {
+    return
+  }
 
   for (const { matcher, allowedRoles } of matchers) {
     if (matcher(req) && !allowedRoles.includes(role!)) {
