@@ -26,7 +26,6 @@ const eslintConfig = [
       prettier: pluginPrettier,
     },
     rules: {
-      // 👇 now Prettier issues show as ESLint errors
       'prettier/prettier': 'error',
     },
   },
