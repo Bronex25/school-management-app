@@ -12,10 +12,11 @@ import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 
 const SingleStudentPage = async ({
-  params: { id },
+  params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) => {
+  const { id } = await params
   const { sessionClaims } = await auth()
   const role = (sessionClaims?.metadata as { role?: string }).role
 
@@ -31,7 +32,7 @@ const SingleStudentPage = async ({
   })
 
   if (!student) {
-    return notFound
+    notFound()
   }
   return (
     <div className="flex-1 p-4 flex flex-col gap-4 xl:flex-row">

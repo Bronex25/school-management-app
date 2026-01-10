@@ -90,10 +90,9 @@ const renderRow = (item: EventList) => (
 const EventListPage = async ({
   searchParams,
 }: {
-  searchParams: Promise<{ [key: string]: string }> | { [key: string]: string }
+  searchParams: Promise<{ [key: string]: string }>
 }) => {
-  const params =
-    searchParams instanceof Promise ? await searchParams : searchParams
+  const params = await searchParams
   const { page, ...queryParams } = params
 
   const currentPage = page ? parseInt(page) : 1

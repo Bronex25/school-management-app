@@ -78,7 +78,7 @@ const renderRow = (item: ParentList) => (
 const ParentsListPage = async ({
   searchParams,
 }: {
-  searchParams: { [key: string]: string }
+  searchParams: Promise<{ [key: string]: string }>
 }) => {
   const { page, ...queryParams } = await searchParams
 

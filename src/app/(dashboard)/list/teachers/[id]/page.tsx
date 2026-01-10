@@ -36,7 +36,7 @@ const SingleTeacherPage = async ({
   })
 
   if (!teacher) {
-    return notFound
+    notFound()
   }
 
   return (

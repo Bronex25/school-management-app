@@ -79,7 +79,7 @@ const renderRow = (item: AssignmentList) => (
 const AssignmentListPage = async ({
   searchParams,
 }: {
-  searchParams: { [key: string]: string }
+  searchParams: Promise<{ [key: string]: string }>
 }) => {
   const { page, ...queryParams } = await searchParams
 
