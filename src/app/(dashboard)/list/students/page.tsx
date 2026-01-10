@@ -12,91 +12,92 @@ import React from 'react'
 
 type StudentList = Student & { class: Class }
 
-const { sessionClaims } = await auth()
-const role = (sessionClaims?.metadata as { role?: string }).role
-
-const columns = [
-  {
-    header: 'Info',
-    accessor: 'info',
-  },
-  {
-    header: 'Student ID',
-    accessor: 'studentId',
-    className: 'hidden md:table-cell',
-  },
-  {
-    header: 'Grade',
-    accessor: 'grade',
-    className: 'hidden md:table-cell',
-  },
-  {
-    header: 'Phone',
-    accessor: 'phone',
-    className: 'hidden lg:table-cell',
-  },
-  {
-    header: 'Address',
-    accessor: 'address',
-    className: 'hidden lg:table-cell',
-  },
-  ...(role === 'admin'
-    ? [
-        {
-          header: 'Actions',
-          accessor: 'action',
-        },
-      ]
-    : []),
-]
-const renderRow = (item: StudentList) => (
-  <tr
-    key={item.id}
-    className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-myPurple"
-  >
-    <td className="flex items-center gap-4 p-4">
-      <Image
-        src={item.img || '/noAvatar.png'}
-        alt="photo"
-        width={48}
-        height={48}
-        className="md: hidden xl:block w-10 h-10 rounded-full object-cover"
-      />
-      <div className="flex flex-col">
-        <h3 className="font-semibold">{item.name}</h3>
-        <p className="text-xs text-gray-500">{item?.class.name}</p>
-      </div>
-    </td>
-    <td className="hidden md:table-cell">{item.username}</td>
-    <td className="hidden md:table-cell">{item.class.name[0]}</td>
-    <td className="hidden lg:table-cell">{item.phone}</td>
-    <td className="hidden lg:table-cell">{item.address}</td>
-    <td>
-      <div className="flex items-center gap-2">
-        <Link href={`/list/students/${item.id}`}>
-          <button className="w-7 h-7 flex items-center justify-center rounded-full bg-mySky">
-            <Image
-              src="/view.png"
-              alt="view button"
-              height={16}
-              width={16}
-            ></Image>
-          </button>
-        </Link>
-        {role === 'admin' && (
-          <FormContainer table="student" type="delete" id={item.id} />
-        )}
-      </div>
-    </td>
-  </tr>
-)
-
 const StudentListPage = async ({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string }>
 }) => {
+  const { sessionClaims } = await auth()
+  const role = (sessionClaims?.metadata as { role?: string }).role
+
   const { page, ...queryParams } = await searchParams
+
+  const columns = [
+    {
+      header: 'Info',
+      accessor: 'info',
+    },
+    {
+      header: 'Student ID',
+      accessor: 'studentId',
+      className: 'hidden md:table-cell',
+    },
+    {
+      header: 'Grade',
+      accessor: 'grade',
+      className: 'hidden md:table-cell',
+    },
+    {
+      header: 'Phone',
+      accessor: 'phone',
+      className: 'hidden lg:table-cell',
+    },
+    {
+      header: 'Address',
+      accessor: 'address',
+      className: 'hidden lg:table-cell',
+    },
+    ...(role === 'admin'
+      ? [
+          {
+            header: 'Actions',
+            accessor: 'action',
+          },
+        ]
+      : []),
+  ]
+
+  const renderRow = (item: StudentList) => (
+    <tr
+      key={item.id}
+      className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-myPurple"
+    >
+      <td className="flex items-center gap-4 p-4">
+        <Image
+          src={item.img || '/noAvatar.png'}
+          alt="photo"
+          width={48}
+          height={48}
+          className="md: hidden xl:block w-10 h-10 rounded-full object-cover"
+        />
+        <div className="flex flex-col">
+          <h3 className="font-semibold">{item.name}</h3>
+          <p className="text-xs text-gray-500">{item?.class.name}</p>
+        </div>
+      </td>
+      <td className="hidden md:table-cell">{item.username}</td>
+      <td className="hidden md:table-cell">{item.class.name[0]}</td>
+      <td className="hidden lg:table-cell">{item.phone}</td>
+      <td className="hidden lg:table-cell">{item.address}</td>
+      <td>
+        <div className="flex items-center gap-2">
+          <Link href={`/list/students/${item.id}`}>
+            <button className="w-7 h-7 flex items-center justify-center rounded-full bg-mySky">
+              <Image
+                src="/view.png"
+                alt="view button"
+                height={16}
+                width={16}
+              ></Image>
+            </button>
+          </Link>
+          {role === 'admin' && (
+            <FormContainer table="student" type="delete" id={item.id} />
+          )}
+        </div>
+      </td>
+    </tr>
+  )
 
   const currentPage = page ? parseInt(page) : 1
 

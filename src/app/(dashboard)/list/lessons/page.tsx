@@ -15,95 +15,96 @@ type LessonList = Lesson & { subject: Subject } & { class: Class } & {
   teacher: Teacher
 }
 
-const { sessionClaims } = await auth()
-const role = (sessionClaims?.metadata as { role?: string }).role
-
-const columns = [
-  {
-    header: 'Name',
-    accessor: 'name',
-  },
-  {
-    header: 'Day',
-    accessor: 'day',
-  },
-  {
-    header: 'Start Time',
-    accessor: 'startTime',
-    className: 'hidden md:table-cell',
-  },
-  {
-    header: 'End Time',
-    accessor: 'endTime',
-    className: 'hidden md:table-cell',
-  },
-  {
-    header: 'Subject Name',
-    accessor: 'name',
-  },
-  {
-    header: 'Class',
-    accessor: 'class',
-  },
-  {
-    header: 'Teacher',
-    accessor: 'teacher',
-    className: 'hidden md:table-cell',
-  },
-  ...(role === 'admin'
-    ? [
-        {
-          header: 'Actions',
-          accessor: 'action',
-        },
-      ]
-    : []),
-]
-const renderRow = (item: LessonList) => (
-  <tr
-    key={item.id}
-    className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-myPurple"
-  >
-    <td className="flex items-center gap-4 p-4">{item.name}</td>
-    <td>{item.day}</td>
-    <td className="hidden md:table-cell">
-      {item.startTime.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-      })}
-    </td>
-    <td className="hidden md:table-cell">
-      {item.endTime.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-      })}
-    </td>
-    <td className="flex items-center gap-4 p-4">{item.subject.name}</td>
-    <td>{item.class.name}</td>
-    <td className="hidden md:table-cell">
-      {item.teacher.name + ' ' + item.teacher.surname}
-    </td>
-    <td>
-      <div className="flex items-center gap-2">
-        {role === 'admin' && (
-          <>
-            <FormContainer table="lesson" type="update" data={item} />
-            <FormContainer table="lesson" type="delete" id={item.id} />
-          </>
-        )}
-      </div>
-    </td>
-  </tr>
-)
-
 const LessonListPage = async ({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string }>
 }) => {
+  const { sessionClaims } = await auth()
+  const role = (sessionClaims?.metadata as { role?: string }).role
+
   const { page, ...queryParams } = await searchParams
+
+  const columns = [
+    {
+      header: 'Name',
+      accessor: 'name',
+    },
+    {
+      header: 'Day',
+      accessor: 'day',
+    },
+    {
+      header: 'Start Time',
+      accessor: 'startTime',
+      className: 'hidden md:table-cell',
+    },
+    {
+      header: 'End Time',
+      accessor: 'endTime',
+      className: 'hidden md:table-cell',
+    },
+    {
+      header: 'Subject Name',
+      accessor: 'name',
+    },
+    {
+      header: 'Class',
+      accessor: 'class',
+    },
+    {
+      header: 'Teacher',
+      accessor: 'teacher',
+      className: 'hidden md:table-cell',
+    },
+    ...(role === 'admin'
+      ? [
+          {
+            header: 'Actions',
+            accessor: 'action',
+          },
+        ]
+      : []),
+  ]
+
+  const renderRow = (item: LessonList) => (
+    <tr
+      key={item.id}
+      className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-myPurple"
+    >
+      <td className="flex items-center gap-4 p-4">{item.name}</td>
+      <td>{item.day}</td>
+      <td className="hidden md:table-cell">
+        {item.startTime.toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        })}
+      </td>
+      <td className="hidden md:table-cell">
+        {item.endTime.toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        })}
+      </td>
+      <td className="flex items-center gap-4 p-4">{item.subject.name}</td>
+      <td>{item.class.name}</td>
+      <td className="hidden md:table-cell">
+        {item.teacher.name + ' ' + item.teacher.surname}
+      </td>
+      <td>
+        <div className="flex items-center gap-2">
+          {role === 'admin' && (
+            <>
+              <FormContainer table="lesson" type="update" data={item} />
+              <FormContainer table="lesson" type="delete" id={item.id} />
+            </>
+          )}
+        </div>
+      </td>
+    </tr>
+  )
 
   const currentPage = page ? parseInt(page) : 1
 

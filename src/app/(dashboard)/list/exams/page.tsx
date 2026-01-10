@@ -17,15 +17,15 @@ type ExamList = Exam & {
   }
 }
 
-const { userId, sessionClaims } = await auth()
-const role = (sessionClaims?.metadata as { role?: string }).role
-const currentUserId = userId
-
 const ExamListPage = async ({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string }>
 }) => {
+  const { userId, sessionClaims } = await auth()
+  const role = (sessionClaims?.metadata as { role?: string }).role
+  const currentUserId = userId
+
   const { page, ...queryParams } = await searchParams
 
   const currentPage = page ? parseInt(page) : 1
