@@ -4,6 +4,8 @@
 
 **A comprehensive, full-stack school management platform with role-based access control**
 
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-View_Application-00C853?style=for-the-badge&logo=vercel&logoColor=white)](https://scholario-zeta.vercel.app/)
+
 [![Next.js](https://img.shields.io/badge/Next.js-15.5-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19.1-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
@@ -19,6 +21,8 @@
 ## 📋 Overview
 
 A modern, feature-rich school management application designed to streamline educational administration. Built with Next.js 15 and TypeScript, this platform provides separate dashboards for administrators, teachers, students, and parents, enabling efficient management of classes, lessons, assignments, exams, attendance, and academic records.
+
+> 🌐 **Try it live**: [View Demo](https://scholario-zeta.vercel.app/) - Experience the full application with all features and role-based dashboards.
 
 ### ✨ Key Highlights
 
@@ -96,6 +100,8 @@ A modern, feature-rich school management application designed to streamline educ
 ---
 
 ## 🚀 Getting Started
+
+> 💡 **Quick Start**: Want to see it in action? [Visit the live demo](https://scholario-zeta.vercel.app/) to explore all features without any setup!
 
 ### Prerequisites
 
